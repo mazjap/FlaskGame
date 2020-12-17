@@ -8,18 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843680258B23A700652B48 /* FlaskGameApp.swift */; };
-		0E843683258B23A700652B48 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843682258B23A700652B48 /* ContentView.swift */; };
+		0E843683258B23A700652B48 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843682258B23A700652B48 /* GameView.swift */; };
 		0E843685258B23AB00652B48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E843684258B23AB00652B48 /* Assets.xcassets */; };
 		0E843688258B23AB00652B48 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E843687258B23AB00652B48 /* Preview Assets.xcassets */; };
+		0E843691258B244700652B48 /* FlaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843690258B244700652B48 /* FlaskView.swift */; };
+		0E843694258B2CFA00652B48 /* Flask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843693258B2CFA00652B48 /* Flask.swift */; };
+		0E843697258B2E2500652B48 /* FlaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843696258B2E2500652B48 /* FlaskController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0E84367D258B23A700652B48 /* FlaskGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlaskGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E843680258B23A700652B48 /* FlaskGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskGameApp.swift; sourceTree = "<group>"; };
-		0E843682258B23A700652B48 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0E843682258B23A700652B48 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		0E843684258B23AB00652B48 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E843687258B23AB00652B48 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0E843689258B23AB00652B48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E843690258B244700652B48 /* FlaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskView.swift; sourceTree = "<group>"; };
+		0E843693258B2CFA00652B48 /* Flask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flask.swift; sourceTree = "<group>"; };
+		0E843696258B2E2500652B48 /* FlaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +59,10 @@
 			isa = PBXGroup;
 			children = (
 				0E843680258B23A700652B48 /* FlaskGameApp.swift */,
-				0E843682258B23A700652B48 /* ContentView.swift */,
+				0E843682258B23A700652B48 /* GameView.swift */,
+				0E843690258B244700652B48 /* FlaskView.swift */,
+				0E843693258B2CFA00652B48 /* Flask.swift */,
+				0E843696258B2E2500652B48 /* FlaskController.swift */,
 				0E843684258B23AB00652B48 /* Assets.xcassets */,
 				0E843689258B23AB00652B48 /* Info.plist */,
 				0E843686258B23AB00652B48 /* Preview Content */,
@@ -138,8 +147,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E843683258B23A700652B48 /* ContentView.swift in Sources */,
+				0E843697258B2E2500652B48 /* FlaskController.swift in Sources */,
+				0E843683258B23A700652B48 /* GameView.swift in Sources */,
+				0E843691258B244700652B48 /* FlaskView.swift in Sources */,
 				0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */,
+				0E843694258B2CFA00652B48 /* Flask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

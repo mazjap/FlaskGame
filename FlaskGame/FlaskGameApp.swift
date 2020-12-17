@@ -11,7 +11,7 @@ import SwiftUI
 struct FlaskGameApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView()
         }
     }
 }
