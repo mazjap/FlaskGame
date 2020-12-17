@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct FlaskGameApp: App {
+    @StateObject private var flaskController = FlaskController()
+    
     var body: some Scene {
         WindowGroup {
-            GameView()
+            GameView(flaskController: flaskController)
         }
     }
 }

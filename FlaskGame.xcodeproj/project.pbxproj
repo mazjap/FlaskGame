@@ -14,6 +14,7 @@
 		0E843691258B244700652B48 /* FlaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843690258B244700652B48 /* FlaskView.swift */; };
 		0E843694258B2CFA00652B48 /* Flask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843693258B2CFA00652B48 /* Flask.swift */; };
 		0E843697258B2E2500652B48 /* FlaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843696258B2E2500652B48 /* FlaskController.swift */; };
+		0E84369A258BFBC500652B48 /* FlaskShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843699258BFBC500652B48 /* FlaskShape.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		0E843690258B244700652B48 /* FlaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskView.swift; sourceTree = "<group>"; };
 		0E843693258B2CFA00652B48 /* Flask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flask.swift; sourceTree = "<group>"; };
 		0E843696258B2E2500652B48 /* FlaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskController.swift; sourceTree = "<group>"; };
+		0E843699258BFBC500652B48 /* FlaskShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskShape.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			children = (
 				0E843680258B23A700652B48 /* FlaskGameApp.swift */,
 				0E843682258B23A700652B48 /* GameView.swift */,
+				0E843699258BFBC500652B48 /* FlaskShape.swift */,
 				0E843690258B244700652B48 /* FlaskView.swift */,
 				0E843693258B2CFA00652B48 /* Flask.swift */,
 				0E843696258B2E2500652B48 /* FlaskController.swift */,
@@ -152,6 +155,7 @@
 				0E843691258B244700652B48 /* FlaskView.swift in Sources */,
 				0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */,
 				0E843694258B2CFA00652B48 /* Flask.swift in Sources */,
+				0E84369A258BFBC500652B48 /* FlaskShape.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

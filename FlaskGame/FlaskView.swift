@@ -8,51 +8,42 @@
 import SwiftUI
 
 struct FlaskView: View {
+    private let flask: Flask
     
-    var body: some View {
-        VStack {
-            FlaskView.background
-                .foregroundColor(.red)
-        }
+    init(flask: Flask) {
+        self.flask = flask
     }
     
-    static var background: Path {
-        var path = Path()
-        
-        let offset: CGFloat = 5
-        
-        let width: CGFloat = 30
-        let height: CGFloat = 80
-        
-        let secondaryLineHeight = height - offset * 4
-        
-        // Flask - Top
-        path.move(to: CGPoint(x: offset, y: 0))
-        path.addLine(to: CGPoint(x: width - offset * 2, y: 0))
-        
-        // Flask - Top-Left Curve
-        path.addArc(center: CGPoint(x: offset, y: offset), radius: offset, startAngle: Angle(radians: .pi / 2), endAngle: Angle(radians: 3 * .pi / 2), clockwise: true)
-        
-        // Flask - Top-Right Curve
-        path.addArc(center: CGPoint(x: width - offset * 2, y: offset), radius: offset, startAngle: Angle(radians: .pi / 2), endAngle: Angle(radians: 3 * .pi / 2), clockwise: false)
-        
-        // Flask - Left Side
-        path.move(to: CGPoint(x: offset, y: offset * 2))
-        path.addLine(to: CGPoint(x: offset, y: secondaryLineHeight))
-        
-        // Flask - Right Side
-        path.move(to: CGPoint(x: width - offset * 2, y: offset * 2))
-        path.addLine(to: CGPoint(x: width - offset * 2, y: secondaryLineHeight))
-        
-        // Flask - Bottom Curve
-        path.addArc(center: CGPoint(x: width / 2, y: secondaryLineHeight), radius: width / 2 - offset, startAngle: Angle(radians: 0), endAngle: Angle(radians: .pi), clockwise: true)
-        
-        return path
+    var body: some View {
+        FlaskShape()
+            .stroke(style: StrokeStyle(lineWidth: 3))
+            .background(
+                VStack {
+                    ForEach(0..<flask.viewColors.count) { i in
+                        Color(flask.viewColors[i])
+                    }
+                }
+                .clipShape(FlaskShape())
+            )
     }
 }
 
 struct FlaskView_Previews: PreviewProvider {
     static var previews: some View {
-        FlaskView()
+        FlaskView(flask: Flask(colors: [.red, .green, .gray, .blue]))
+    }
+}
+
+extension CGRect {
+    init(p1: CGPoint, p2: CGPoint) {
+        let startPoint = CGPoint(x: min(p1.x, p2.x), y: min(p1.x, p2.x))
+        let width = abs(p1.x - p2.x)
+        let height = abs(p1.y - p2.y)
+        
+        self.init(x: startPoint.x, y: startPoint.y, width: width, height: height)
+    }
+    
+    init(x1: CGFloat, y1: CGFloat, x2: CGFloat, y2: CGFloat) {
+        self.init(p1: CGPoint(x: x1, y: y1), p2: CGPoint(x: x2, y: y2))
     }
 }
