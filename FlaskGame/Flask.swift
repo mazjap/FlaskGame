@@ -8,72 +8,105 @@
 import Foundation
 import UIKit.UIColor
 
-struct Flask {
+struct Flask: Equatable {
     typealias Color = UIColor
     
-    private var colors: [Color]
+    // MARK: - Variables
     
+    // Private
+    private(set) var colors: [Color]
+    
+    // Public
+    var index: Int
+    
+    // Computed
     var viewColors: [Color] {
         guard colors.count <= 4 else { return Array(colors[colors.startIndex...colors.startIndex.advanced(by: 3)]) }
-        return colors + [Color](repeating: .clear, count: 4 - colors.count)
+        return [Color](repeating: .clear, count: 4 - colors.count).reversed() + colors
     }
-    
-    init(colors: [Color]) {
-        if colors.count > 4 {
-            self.colors = Array(colors[colors.startIndex...colors.startIndex.advanced(by: 3)])
-        } else {
-            self.colors = colors
-        }
+    var topColor: Color {
+        colors.first ?? .clear
     }
-    
-    init(_ color: Color) {
-        self.colors = [Color](repeating: color, count: 4)
-    }
-    
-    var topColorAndCount: (color: Color, count: Int) {
-        guard let topColor = colors.last else { return Self.noColorAndCount }
+    var topColorCount: Int {
+        guard topColor != .clear else { return 0 }
         
         var count = 0
-        
-        for i in (0..<colors.count).reversed() {
-            if colors[i] != topColor {
+        for color in colors {
+            if color != topColor {
                 break
             }
             
             count += 1
         }
         
-        return (topColor, count)
+        return count
     }
     
+    var isPure: Bool {
+        if let test = colors.first {
+            for color in colors {
+                guard color == test else { return false }
+            }
+        }
+        
+        return true
+    }
+    
+    // MARK: - Init
+    
+    init(colors: [Color], index: Int = 0) {
+        if colors.count > 4 {
+            self.colors = Array(colors[colors.startIndex...colors.startIndex.advanced(by: 3)])
+        } else {
+            self.colors = colors
+        }
+        
+        self.index = index
+    }
+    
+    init(_ color: Color, index: Int = 0) {
+        self.colors = [Color](repeating: color, count: 4)
+        self.index = index
+    }
+    
+    // MARK: - Functions
+    
+    // Mutating
     mutating func addColor(_ color: Color, count: Int = 1) -> Int {
         let avaibleSpace = max(0, 4 - colors.count)
         let amount = min(avaibleSpace, count)
         
-        for _ in 0..<amount {
-            colors.append(color)
+        if color == topColor || topColor == .clear {
+            colors = [Color](repeating: color, count: amount) + colors
+            return count - amount
+        } else {
+            return count
         }
-        
-        return count - amount
     }
     
-    mutating func removeTop(_ count: Int = 0) -> (color: Color, count: Int) {
-        let color: UIColor, amount: Int; (color, amount) = topColorAndCount
-        let from = (count != 0 && count <= amount) ? count : amount
+    mutating func removeTop(_ count: Int = 0) {
+        let to = min(count, topColorCount)
         
-        for i in (from..<colors.count).reversed() {
-            colors.remove(at: i)
+        for _ in 0..<to {
+            colors.removeFirst()
         }
-        
-        return from != 0 ? (color, from) : Self.noColorAndCount
     }
     
+    // MARK: - Static
+    
+    // Variables
     static let noFlask = Flask(colors: [])
-    static private let noColorAndCount: (Color, Int) = (.clear, 0)
-}
-
-extension Flask {
-    enum Errors: Error {
-        case noColors
+    
+    // Functions
+    static func noFlask(index: Int) -> Self {
+        var flask = noFlask
+        flask.index = index
+        
+        return flask
+    }
+    
+    static func == (lhs: Flask, rhs: Flask) -> Bool {
+        return lhs.colors == rhs.colors &&
+            lhs.index == rhs.index
     }
 }

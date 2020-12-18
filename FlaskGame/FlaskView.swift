@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FlaskView: View {
-    private let flask: Flask
+    let flask: Flask
     
     init(flask: Flask) {
         self.flask = flask
@@ -18,7 +18,7 @@ struct FlaskView: View {
         FlaskShape()
             .stroke(style: StrokeStyle(lineWidth: 3))
             .background(
-                VStack {
+                VStack(spacing: 0) {
                     ForEach(0..<flask.viewColors.count) { i in
                         Color(flask.viewColors[i])
                     }

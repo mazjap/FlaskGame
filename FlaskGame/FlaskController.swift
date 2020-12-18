@@ -9,26 +9,72 @@ import Foundation
 import UIKit.UIColor
 
 class FlaskController: ObservableObject {
-    @Published var flasks: [Flask]
     
-    init(flasks: [Flask] = FlaskController.generateRandom()) {
-        self.flasks = flasks
+    private var previousMoves: [[Flask]] = []
+    
+    @Published var flasks: [Flask]
+    @Published private(set) var didWinGame: Bool
+    
+    init(_ flaskArray: [Flask] = FlaskController.generateRandom()) {
+        self.didWinGame = false
+        self.flasks = flaskArray + [Flask.noFlask(index: flaskArray.count), Flask.noFlask(index: flaskArray.count + 1)]
+        addMove()
+    }
+    
+    private func addMove() {
+        previousMoves.append(flasks)
+    }
+    
+    private func resetMoves() {
+        previousMoves = []
+        addMove()
+    }
+    
+    private func checkWon() -> Bool {
+        for flask in flasks {
+            guard flask.isPure else { return false }
+        }
+        
+        return true
+    }
+    
+    func undo() {
+        if let lastMove = previousMoves.last {
+            previousMoves.removeLast()
+            flasks = lastMove
+        }
+    }
+    
+    func restart() {
+        if let start = previousMoves.first {
+            flasks = start
+            resetMoves()
+        }
+    }
+    
+    func newGame() {
+        let flaskArr = Self.generateRandom()
+        flasks = flaskArr + [Flask.noFlask(index: flaskArr.count), Flask.noFlask(index: flaskArr.count + 1)]
+        
+        resetMoves()
     }
     
     func dumpFlask(_ flaskIndex: Int, into otherFlaskIndex: Int) {
         var flask1 = flasks[flaskIndex]
         var flask2 = flasks[otherFlaskIndex]
         
-        // Get top-color amount in flask1
-        let info = flask1.topColorAndCount
-        
         // Try to dump flask1's top color into flask2, while saving the left-over amount that cannot fit
-        let remainder = flask2.addColor(info.color, count: info.count)
+        let remainder = flask2.addColor(flask1.topColor, count: flask1.topColorCount)
         
         // Remove the top color from flask1 as many times as could fit in flask2
-        guard flask1.removeTop(info.count - remainder).count == 0 else {
-            fatalError("This shouldn't happen if the code above f\(#file)l\(#line) functions correctly")
-        }
+        flask1.removeTop(flask1.topColorCount - remainder)
+        
+        flasks[flaskIndex] = flask1
+        flasks[otherFlaskIndex] = flask2
+        
+        addMove()
+        
+        didWinGame = checkWon()
     }
     
     static func generateRandom(count: Int = 12) -> [Flask] {
@@ -42,10 +88,8 @@ class FlaskController: ObservableObject {
         
         for i in 0..<colorArr.count {
             // Use color arrays to create and append new flask
-            flasks.append(Flask(colors: [colors[0][i], colors[1][i], colors[2][i], colors[3][i]]))
+            flasks.append(Flask(colors: [colors[0][i], colors[1][i], colors[2][i], colors[3][i]], index: i))
         }
-        
-        flasks.append(contentsOf: [.noFlask, .noFlask])
         
         return flasks
     }
