@@ -11,6 +11,7 @@ struct GameView: View {
     @ObservedObject private var flaskController: FlaskController
     
     @State private var selectedFlask: Flask? = nil
+    @State private var showAlert: Bool = false
     
     private var flaskHeight: CGFloat = UIScreen.main.bounds.height / 4
     
@@ -29,7 +30,7 @@ struct GameView: View {
                 
                 Spacer()
                 
-                Button(action: { flaskController.newGame() }, label: {
+                Button(action: { showAlert = true }, label: {
                     Image(systemName: "plus.square.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -46,14 +47,17 @@ struct GameView: View {
             .frame(height: 30)
             .padding(.top, 16)
             
-            let split = flaskController.flasks.count / 2
+            let start = flaskController.flasks.startIndex
+            let half = start.advanced(by: flaskController.flasks.count / 2)
+            let end = flaskController.flasks.endIndex
+            
+            let firstHalf = flaskController.flasks[start..<half]
+            let secondHalf = flaskController.flasks[half..<end]
             
             Spacer()
             
             HStack {
-                ForEach(0..<split) { i in
-                    let flask = flaskController.flasks[i]
-                    
+                ForEach(firstHalf) { flask in
                     FlaskView(flask: flask)
                         .offset(y: selectedFlask == flask ? -20 : 0)
                         .onTapGesture {
@@ -66,10 +70,8 @@ struct GameView: View {
             Spacer()
             
             HStack {
-                ForEach(split..<flaskController.flasks.count) { i in
-                    let flask = flaskController.flasks[i]
-                    
-                    FlaskView(flask: flaskController.flasks[i])
+                ForEach(secondHalf) { flask in
+                    FlaskView(flask: flask)
                         .offset(y: selectedFlask == flask ? -20 : 0)
                         .onTapGesture {
                             flaskTapped(flask)
@@ -81,6 +83,13 @@ struct GameView: View {
             Spacer()
         }
         .padding(.horizontal, 20)
+        .alert(isPresented: $showAlert, content: {
+            Alert(title: Text("Select level difficulty:"), primaryButton: .default(Text("12")) {
+                flaskController.newGame()
+            }, secondaryButton: .default(Text("14")) {
+                flaskController.newGame(flaskCount: 14)
+            })
+        })
     }
     
     func flaskTapped(_ flask: Flask) {

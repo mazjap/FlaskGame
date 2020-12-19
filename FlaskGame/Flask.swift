@@ -8,7 +8,7 @@
 import Foundation
 import UIKit.UIColor
 
-struct Flask: Equatable {
+struct Flask: Equatable, Identifiable {
     typealias Color = UIColor
     
     // MARK: - Variables
@@ -17,6 +17,10 @@ struct Flask: Equatable {
     private(set) var colors: [Color]
     
     // Public
+    var id: String {
+        "Colors: \(colors) \n" +
+        "Index: \(index)"
+    }
     var index: Int
     
     // Computed
@@ -106,7 +110,6 @@ struct Flask: Equatable {
     }
     
     static func == (lhs: Flask, rhs: Flask) -> Bool {
-        return lhs.colors == rhs.colors &&
-            lhs.index == rhs.index
+        return lhs.id == rhs.id
     }
 }

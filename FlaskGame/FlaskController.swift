@@ -52,8 +52,8 @@ class FlaskController: ObservableObject {
         }
     }
     
-    func newGame() {
-        let flaskArr = Self.generateRandom()
+    func newGame(flaskCount: Int = 12) {
+        let flaskArr = Self.generateRandom(count: flaskCount)
         flasks = flaskArr + [Flask.noFlask(index: flaskArr.count), Flask.noFlask(index: flaskArr.count + 1)]
         
         resetMoves()
