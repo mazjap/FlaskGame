@@ -1,10 +1,3 @@
-//
-//  FlaskShape.swift
-//  FlaskGame
-//
-//  Created by Jordan Christensen on 12/17/20.
-//
-
 import SwiftUI
 
 struct FlaskShape: Shape {
@@ -17,11 +10,31 @@ struct FlaskShape: Shape {
         
         let secondaryLineHeight = height - offset * 2
         
+        let bottomSemicircleRadius = width / 2 - offset
+        
         // Flask - Bottom Curve
-        path.addArc(center: CGPoint(x: width / 2, y: secondaryLineHeight), radius: width / 2 - offset, startAngle: Angle(radians: 0), endAngle: Angle(radians: .pi), clockwise: false)
+        path.addArc(
+            center: CGPoint(
+                x: width / 2,
+                y: height - bottomSemicircleRadius
+            ),
+            radius: bottomSemicircleRadius,
+            startAngle: Angle(radians: 0),
+            endAngle: Angle(radians: .pi),
+            clockwise: false
+        )
         
         // Flask - Top-Left Curve
-        path.addArc(center: CGPoint(x: offset, y: offset), radius: offset, startAngle: Angle(radians: .pi / 2), endAngle: Angle(radians: 3 * .pi / 2), clockwise: false)
+        path.addArc(
+            center: CGPoint(
+                x: offset,
+                y: offset
+            ),
+            radius: offset,
+            startAngle: Angle(radians: .pi / 2),
+            endAngle: Angle(radians: 3 * .pi / 2),
+            clockwise: false
+        )
         
         // Flask - Top-Right Curve
         path.addArc(center: CGPoint(x: width - offset, y: offset), radius: offset, startAngle: Angle(radians: 3 * .pi / 2), endAngle: Angle(radians:.pi / 2), clockwise: false)

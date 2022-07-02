@@ -1,10 +1,3 @@
-//
-//  Flask.swift
-//  FlaskGame
-//
-//  Created by Jordan Christensen on 12/16/20.
-//
-
 import Foundation
 import UIKit.UIColor
 
@@ -17,25 +10,18 @@ struct Flask: Equatable, Identifiable {
     private(set) var colors: [Color]
     
     // Public
-    var id: String {
-        "Colors: \(colors) \n" +
-        "Index: \(index)"
-    }
+    let id: UUID = UUID()
     var index: Int
     
-    // Computed
-    var viewColors: [Color] {
-        guard colors.count <= 4 else { return Array(colors[colors.startIndex...colors.startIndex.advanced(by: 3)]) }
-        return [Color](repeating: .clear, count: 4 - colors.count).reversed() + colors
+    var topColor: Color? {
+        colors.last
     }
-    var topColor: Color {
-        colors.first ?? .clear
-    }
+    
     var topColorCount: Int {
-        guard topColor != .clear else { return 0 }
+        guard topColor != .kindaClear else { return 0 }
         
         var count = 0
-        for color in colors {
+        for color in colors.reversed() {
             if color != topColor {
                 break
             }
@@ -76,12 +62,12 @@ struct Flask: Equatable, Identifiable {
     // MARK: - Functions
     
     // Mutating
-    mutating func addColor(_ color: Color, count: Int = 1) -> Int {
+    mutating func addColor(_ color: Color?, count: Int = 1) -> Int {
         let avaibleSpace = max(0, 4 - colors.count)
         let amount = min(avaibleSpace, count)
         
-        if color == topColor || topColor == .clear {
-            colors = [Color](repeating: color, count: amount) + colors
+        if let color = color, (topColor == nil || color == topColor) {
+            colors += [Color](repeating: color, count: amount)
             return count - amount
         } else {
             return count
@@ -89,27 +75,30 @@ struct Flask: Equatable, Identifiable {
     }
     
     mutating func removeTop(_ count: Int = 0) {
-        let to = min(count, topColorCount)
-        
-        for _ in 0..<to {
-            colors.removeFirst()
+        let from = min(count, colors.count - count)
+        for _ in from..<(from + count) {
+            colors.removeLast()
         }
     }
     
     // MARK: - Static
     
     // Variables
-    static let noFlask = Flask(colors: [])
+    static var emptyFlask: Self {
+        Flask(colors: [])
+    }
     
     // Functions
-    static func noFlask(index: Int) -> Self {
-        var flask = noFlask
+    static func emptyFlask(index: Int) -> Self {
+        var flask = emptyFlask
         flask.index = index
         
         return flask
     }
     
     static func == (lhs: Flask, rhs: Flask) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id &&
+            lhs.index == rhs.index &&
+            lhs.colors == rhs.colors
     }
 }
