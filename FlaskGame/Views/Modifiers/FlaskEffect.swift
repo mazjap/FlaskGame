@@ -1,7 +1,12 @@
 import SwiftUI
 
-struct FlaskEffect: ViewModifier {
-    private let clipAmount: Double
+struct FlaskEffect: Animatable, ViewModifier {
+    private var clipAmount: Double
+    
+    var animatableData: Double {
+        get { clipAmount }
+        set { clipAmount = newValue }
+    }
     
     init(completion: Double) {
         self.clipAmount = completion

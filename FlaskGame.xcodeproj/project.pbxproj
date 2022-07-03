@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E5A0A0A286DFCB10080877B /* ConfettiShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5A0A09286DFCB10080877B /* ConfettiShape.swift */; };
+		0E74EF7728702F56008D3FDA /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E74EF7628702F56008D3FDA /* Binding+Extension.swift */; };
 		0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843680258B23A700652B48 /* FlaskGameApp.swift */; };
 		0E843683258B23A700652B48 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843682258B23A700652B48 /* GameView.swift */; };
 		0E843685258B23AB00652B48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E843684258B23AB00652B48 /* Assets.xcassets */; };
@@ -17,14 +19,21 @@
 		0E84369A258BFBC500652B48 /* FlaskShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843699258BFBC500652B48 /* FlaskShape.swift */; };
 		0E8B0886286EA3AC00ADB6B7 /* SwiftUI+animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8B0885286EA3AC00ADB6B7 /* SwiftUI+animate.swift */; };
 		0E8B088A286EA60B00ADB6B7 /* VerticalLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8B0889286EA60B00ADB6B7 /* VerticalLabelStyle.swift */; };
-		0EB561B5286EB381009412D8 /* FlaskDumpEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB561B4286EB381009412D8 /* FlaskDumpEffect.swift */; };
+		0EB561B5286EB381009412D8 /* FlaskEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB561B4286EB381009412D8 /* FlaskEffect.swift */; };
 		0EB561B7286EB5BA009412D8 /* PartRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB561B6286EB5BA009412D8 /* PartRectangle.swift */; };
 		0EB561B9286EBB4E009412D8 /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB561B8286EBB4E009412D8 /* GlobalFunctions.swift */; };
 		0EB561BB286ECB46009412D8 /* Waves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB561BA286ECB46009412D8 /* Waves.swift */; };
-		0EF35817286FCC5D002D7F14 /* Color+KindaClear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF35816286FCC5D002D7F14 /* Color+KindaClear.swift */; };
+		0EF35817286FCC5D002D7F14 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF35816286FCC5D002D7F14 /* Color+Extension.swift */; };
+		0EF3581B286FF45B002D7F14 /* ConfettiCannon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3581A286FF45B002D7F14 /* ConfettiCannon.swift */; };
+		0EF3581D286FF490002D7F14 /* Confetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3581C286FF490002D7F14 /* Confetti.swift */; };
+		0EF3581F286FF574002D7F14 /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3581E286FF574002D7F14 /* CGPoint+Extension.swift */; };
+		0EF3582128700B51002D7F14 /* WinViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3582028700B51002D7F14 /* WinViewModifier.swift */; };
+		0EF3582428701073002D7F14 /* FlaskColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3582328701073002D7F14 /* FlaskColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E5A0A09286DFCB10080877B /* ConfettiShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiShape.swift; sourceTree = "<group>"; };
+		0E74EF7628702F56008D3FDA /* Binding+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extension.swift"; sourceTree = "<group>"; };
 		0E84367D258B23A700652B48 /* FlaskGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlaskGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E843680258B23A700652B48 /* FlaskGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskGameApp.swift; sourceTree = "<group>"; };
 		0E843682258B23A700652B48 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -37,11 +46,16 @@
 		0E843699258BFBC500652B48 /* FlaskShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskShape.swift; sourceTree = "<group>"; };
 		0E8B0885286EA3AC00ADB6B7 /* SwiftUI+animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+animate.swift"; sourceTree = "<group>"; };
 		0E8B0889286EA60B00ADB6B7 /* VerticalLabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalLabelStyle.swift; sourceTree = "<group>"; };
-		0EB561B4286EB381009412D8 /* FlaskDumpEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskDumpEffect.swift; sourceTree = "<group>"; };
+		0EB561B4286EB381009412D8 /* FlaskEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskEffect.swift; sourceTree = "<group>"; };
 		0EB561B6286EB5BA009412D8 /* PartRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartRectangle.swift; sourceTree = "<group>"; };
 		0EB561B8286EBB4E009412D8 /* GlobalFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
 		0EB561BA286ECB46009412D8 /* Waves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waves.swift; sourceTree = "<group>"; };
-		0EF35816286FCC5D002D7F14 /* Color+KindaClear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+KindaClear.swift"; sourceTree = "<group>"; };
+		0EF35816286FCC5D002D7F14 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		0EF3581A286FF45B002D7F14 /* ConfettiCannon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiCannon.swift; sourceTree = "<group>"; };
+		0EF3581C286FF490002D7F14 /* Confetti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Confetti.swift; sourceTree = "<group>"; };
+		0EF3581E286FF574002D7F14 /* CGPoint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
+		0EF3582028700B51002D7F14 /* WinViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinViewModifier.swift; sourceTree = "<group>"; };
+		0EF3582328701073002D7F14 /* FlaskColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,9 +121,9 @@
 			children = (
 				0E8B0888286EA3DE00ADB6B7 /* Shapes */,
 				0E8B088B286EA60F00ADB6B7 /* Styles */,
+				0EF3582228700C5B002D7F14 /* Modifiers */,
 				0E843682258B23A700652B48 /* GameView.swift */,
 				0E843690258B244700652B48 /* FlaskView.swift */,
-				0EB561B4286EB381009412D8 /* FlaskDumpEffect.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -118,6 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				0E843693258B2CFA00652B48 /* Flask.swift */,
+				0EF3581C286FF490002D7F14 /* Confetti.swift */,
+				0EF3582328701073002D7F14 /* FlaskColor.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -126,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				0E843696258B2E2500652B48 /* FlaskController.swift */,
+				0EF3581A286FF45B002D7F14 /* ConfettiCannon.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -135,7 +152,9 @@
 			children = (
 				0E8B0885286EA3AC00ADB6B7 /* SwiftUI+animate.swift */,
 				0EB561B8286EBB4E009412D8 /* GlobalFunctions.swift */,
-				0EF35816286FCC5D002D7F14 /* Color+KindaClear.swift */,
+				0EF35816286FCC5D002D7F14 /* Color+Extension.swift */,
+				0EF3581E286FF574002D7F14 /* CGPoint+Extension.swift */,
+				0E74EF7628702F56008D3FDA /* Binding+Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -143,6 +162,7 @@
 		0E8B0888286EA3DE00ADB6B7 /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
+				0E5A0A09286DFCB10080877B /* ConfettiShape.swift */,
 				0E843699258BFBC500652B48 /* FlaskShape.swift */,
 				0EB561B6286EB5BA009412D8 /* PartRectangle.swift */,
 				0EB561BA286ECB46009412D8 /* Waves.swift */,
@@ -156,6 +176,15 @@
 				0E8B0889286EA60B00ADB6B7 /* VerticalLabelStyle.swift */,
 			);
 			path = Styles;
+			sourceTree = "<group>";
+		};
+		0EF3582228700C5B002D7F14 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				0EB561B4286EB381009412D8 /* FlaskEffect.swift */,
+				0EF3582028700B51002D7F14 /* WinViewModifier.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,16 +259,23 @@
 				0E843697258B2E2500652B48 /* FlaskController.swift in Sources */,
 				0E843683258B23A700652B48 /* GameView.swift in Sources */,
 				0E843691258B244700652B48 /* FlaskView.swift in Sources */,
-				0EB561B5286EB381009412D8 /* FlaskDumpEffect.swift in Sources */,
-				0EF35817286FCC5D002D7F14 /* Color+KindaClear.swift in Sources */,
+				0E5A0A0A286DFCB10080877B /* ConfettiShape.swift in Sources */,
+				0EF3582128700B51002D7F14 /* WinViewModifier.swift in Sources */,
+				0EF3581F286FF574002D7F14 /* CGPoint+Extension.swift in Sources */,
+				0EB561B5286EB381009412D8 /* FlaskEffect.swift in Sources */,
+				0EF35817286FCC5D002D7F14 /* Color+Extension.swift in Sources */,
 				0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */,
+				0E74EF7728702F56008D3FDA /* Binding+Extension.swift in Sources */,
 				0E8B0886286EA3AC00ADB6B7 /* SwiftUI+animate.swift in Sources */,
+				0EF3581B286FF45B002D7F14 /* ConfettiCannon.swift in Sources */,
 				0E843694258B2CFA00652B48 /* Flask.swift in Sources */,
 				0E8B088A286EA60B00ADB6B7 /* VerticalLabelStyle.swift in Sources */,
+				0EF3582428701073002D7F14 /* FlaskColor.swift in Sources */,
 				0EB561B7286EB5BA009412D8 /* PartRectangle.swift in Sources */,
 				0E84369A258BFBC500652B48 /* FlaskShape.swift in Sources */,
 				0EB561B9286EBB4E009412D8 /* GlobalFunctions.swift in Sources */,
 				0EB561BB286ECB46009412D8 /* Waves.swift in Sources */,
+				0EF3581D286FF490002D7F14 /* Confetti.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

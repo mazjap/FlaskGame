@@ -30,9 +30,6 @@ class FlaskController: ObservableObject {
         self.didWinGame = false
         self.flasks = []
         self.pouringFlasks = [:]
-        
-        newGame(difficulty: .easy)
-        addMove()
     }
     
     private func addMove() {
@@ -42,22 +39,31 @@ class FlaskController: ObservableObject {
     private func resetMoves() {
         previousMoves = []
         addMove()
+        hasWon()
     }
     
+    @discardableResult
     private func hasWon() -> Bool {
+        var hasWon = true
+        
         for flask in flasks {
-            guard flask.isPure else { return false }
+            guard flask.isComplete else {
+                hasWon = false
+                break
+            }
         }
         
-        return true
+        self.didWinGame = hasWon
+        return hasWon
     }
     
-    func flask(with id: String) -> Flask? {
-        guard let uuid = UUID(uuidString: id) else { return nil }
-        return flask(with: uuid)
+    func flask(with id: String?) -> Flask? {
+        guard let str = id else { return nil }
+        
+        return flask(with: UUID(uuidString: str))
     }
     
-    func flask(with id: UUID) -> Flask? {
+    func flask(with id: UUID?) -> Flask? {
         flasks.first(where: { $0.id == id })
     }
     
@@ -74,6 +80,7 @@ class FlaskController: ObservableObject {
         if let lastMove = previousMoves.last {
             previousMoves.removeLast()
             flasks = lastMove
+            hasWon()
         }
     }
     
@@ -81,6 +88,7 @@ class FlaskController: ObservableObject {
         if let start = previousMoves.first {
             flasks = start
             resetMoves()
+            hasWon()
         }
     }
     
@@ -106,8 +114,16 @@ class FlaskController: ObservableObject {
         // Remove the top color from flask1 as many times as could fit in flask2
         flask1.removeTop(flask1.topColorCount - remainder)
         
+        withAnimation {
+            pouringFlasks[flask1.id] = flask2.id
+        }
+        
         flasks[flaskIndex] = flask1
         flasks[otherFlaskIndex] = flask2
+        
+        withAnimation {
+            _ = pouringFlasks.removeValue(forKey: flask1.id)
+        }
         
         if flasks != previousMoves.last {
             addMove()
@@ -117,7 +133,7 @@ class FlaskController: ObservableObject {
     
     static func generateRandom(count: Int = 12) -> [Flask] {
         // Get colors for all flasks and make 4 randomized color arrays
-        let colors: [[UIColor]] = {
+        let colors: [[FlaskColor]] = {
             var colors = Array(repeating: generateColors(count: count), count: 4)
             
             for i in (0..<colors.count).reversed() {
@@ -149,18 +165,9 @@ class FlaskController: ObservableObject {
     
     
     // Generate n unique colors
-    private static func generateColors(count: Int) -> [UIColor] {
+    private static func generateColors(count: Int) -> [FlaskColor] {
         guard count > 0 else { return [] }
         
-        return (0..<count)
-            .map { (Double($0) / Double(count + 1)) }
-            .map {
-                UIColor(
-                    hue: $0,
-                    saturation: Double.random(in: 0.33...0.9),
-                    brightness: Double.random(in: 0.5...1),
-                    alpha: 1
-                )
-            }
+        return Array(FlaskColor.allCases.shuffled().prefix(count))
     }
 }

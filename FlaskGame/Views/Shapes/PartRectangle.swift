@@ -13,10 +13,15 @@ extension Edge {
 
 /// A rectangle that is partly drawn for animation purposes
 struct PartRectangle: Shape {
-    let completion: Double
+    var completion: Double
     let vertical: Bool?
     let edge: Edge?
     let wavy: Bool = true
+    
+    var animatableData: Double {
+        get { completion }
+        set { completion = newValue }
+    }
     
     init(completion: Double, alignedTo edge: Edge? = nil) {
         self.completion = minmax(0, 1, completion)
@@ -75,68 +80,9 @@ struct PartRectangle: Shape {
             return newOrigin
         }()
         
-        let (topLeft, topRight, bottomRight, bottomLeft): (CGPoint, CGPoint, CGPoint, CGPoint) = {
-            var tl = CGPoint(
-                x: rect.minX,
-                y: rect.minY
-            )
-            var tr = CGPoint(
-                x: rect.maxX,
-                y: rect.minY
-            )
-            var bl = CGPoint(
-                x: rect.minX,
-                y: rect.maxY
-            )
-            var br = CGPoint(
-                x: rect.maxX,
-                y: rect.maxY
-            )
-            
-            let dx = (rect.width - newSize.width) / 2
-            let dy = (rect.height - newSize.height) / 2
-            
-            switch edge {
-            case .none:
-                tl.x += dx
-                tl.y += dy
-                
-                tr.x -= dx
-                tr.y += dy
-                
-                br.x -= dx
-                br.y -= dy
-                
-                bl.x += dx
-                bl.y -= dy
-            case .bottom:
-                tl.y += dy
-                tr.y += dy
-            case .trailing:
-                tl.x += dx
-                bl.x += dx
-            case .leading:
-                tr.x -= dx
-                br.x -= dx
-            case .top:
-                bl.y -= dy
-                br.y -= dy
-            }
-            
-            return (tl, tr, br, bl)
-        }()
-        
         var path = Path()
         
         path.addRect(CGRect(origin: newOrigin, size: newSize))
-        
-//        path.addLines([
-//            topLeft,
-//            topRight,
-//            bottomRight,
-//            bottomLeft,
-//            topLeft
-//        ])
         
         return path
     }

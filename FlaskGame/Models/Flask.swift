@@ -7,19 +7,17 @@ struct Flask: Equatable, Identifiable {
     // MARK: - Variables
     
     // Private
-    private(set) var colors: [Color]
+    private(set) var colors: [FlaskColor]
     
     // Public
     let id: UUID = UUID()
     var index: Int
     
-    var topColor: Color? {
+    var topColor: FlaskColor? {
         colors.last
     }
     
     var topColorCount: Int {
-        guard topColor != .kindaClear else { return 0 }
-        
         var count = 0
         for color in colors.reversed() {
             if color != topColor {
@@ -32,7 +30,10 @@ struct Flask: Equatable, Identifiable {
         return count
     }
     
-    var isPure: Bool {
+    var isComplete: Bool {
+        guard !colors.isEmpty else { return true }
+        guard colors.count >= 4 else { return false }
+        
         if let test = colors.first {
             for color in colors {
                 guard color == test else { return false }
@@ -44,7 +45,7 @@ struct Flask: Equatable, Identifiable {
     
     // MARK: - Init
     
-    init(colors: [Color], index: Int = 0) {
+    init(colors: [FlaskColor], index: Int = 0) {
         if colors.count > 4 {
             self.colors = Array(colors[colors.startIndex...colors.startIndex.advanced(by: 3)])
         } else {
@@ -54,20 +55,20 @@ struct Flask: Equatable, Identifiable {
         self.index = index
     }
     
-    init(_ color: Color, index: Int = 0) {
-        self.colors = [Color](repeating: color, count: 4)
+    init(_ color: FlaskColor, index: Int = 0) {
+        self.colors = [FlaskColor](repeating: color, count: 4)
         self.index = index
     }
     
     // MARK: - Functions
     
     // Mutating
-    mutating func addColor(_ color: Color?, count: Int = 1) -> Int {
+    mutating func addColor(_ color: FlaskColor?, count: Int = 1) -> Int {
         let avaibleSpace = max(0, 4 - colors.count)
         let amount = min(avaibleSpace, count)
         
         if let color = color, (topColor == nil || color == topColor) {
-            colors += [Color](repeating: color, count: amount)
+            colors += [FlaskColor](repeating: color, count: amount)
             return count - amount
         } else {
             return count

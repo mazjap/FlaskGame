@@ -22,8 +22,10 @@ struct VerticalLabelStyle: LabelStyle {
             case .iconThenTitle:
                 configuration.icon
                 configuration.title
+                    .font(.footnote)
             case .titleThenIcon:
                 configuration.title
+                    .font(.footnote)
                 configuration.icon
             }
         }

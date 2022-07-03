@@ -1,14 +1,13 @@
 import SwiftUI
 
 struct FlaskView: View {
-    @State private var anchor: Anchor<CGRect>? = nil
-    @Binding private var animationOffset: CGFloat
+    @Binding private var offsetWave: Bool
     
     let flask: Flask
     
-    init(flask: Flask, animationOffset: Binding<CGFloat> = .constant(0)) {
+    init(flask: Flask, offsetWave: Binding<Bool> = .constant(false)) {
         self.flask = flask
-        self._animationOffset = animationOffset
+        self._offsetWave = offsetWave
     }
     
     private var colors: some View {
@@ -19,12 +18,16 @@ struct FlaskView: View {
                     .enumerated()
                     .map { ($0.offset, $0.element) },
                 id: \.0
-            ) { (_, color) in
-                Color(color)
+            ) { (position, color) in
+                Label {
+                    Text("Color \(color.rawValue) at \(position)")
+                } icon: {
+                    color.color
+                }
             }
         }
-        .transition(.identity)
         .allowsHitTesting(true)
+        .labelStyle(.iconOnly)
     }
     
     var body: some View {
@@ -42,19 +45,20 @@ struct FlaskView: View {
                             .frame(height: geometry.size.height * spacerScale)
                         
                         colors
-                            .clipShape(Waves(offset: animationOffset))
                             .frame(height: geometry.size.height * colorsScale)
+                            .clipShape(Waves(offset: offsetWave ? .pi / 8 : 0))
                     }
                 }
                 .clipShape(shape)
             )
             .contentShape(shape)
+            .transition(.identity)
     }
 }
 
 struct FlaskView_Previews: PreviewProvider {
     static var previews: some View {
-        FlaskView(flask: Flask(colors: [.red, .green, .gray, .blue]))
+        FlaskView(flask: Flask(colors: [.red, .green, .grey, .blue]))
     }
 }
 

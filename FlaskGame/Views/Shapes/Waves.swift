@@ -2,27 +2,37 @@ import SwiftUI
 
 struct Waves: Shape {
     enum Function {
-        case sine
+        case sine(peaksTroughsCount: CGFloat = 5, verticalTranslation: CGFloat = 1, scale: CGFloat = 0.5)
         case custom((CGFloat) -> CGFloat)
         
         /// Performs some transformation to a value (0...1).
         /// - Returns: CGFloat ranged 0...1.
-        func y(for x: CGFloat, offset: CGFloat = 0) -> CGFloat {
+        func y(for x: CGFloat, offset horizontalTranslation: CGFloat = 0) -> CGFloat {
             switch self {
-            case .sine:
+            case let .sine(peaksTroughsCount, verticalTranslation, scale):
                 return (
-                    sin((x + offset) * .pi * 5) + 1) / 2
+                    sin(
+                        (x + horizontalTranslation) * .pi * peaksTroughsCount
+                    ) + verticalTranslation
+                ) * scale
             case let .custom(f):
-                return f(x + offset)
+                return f(x + horizontalTranslation)
             }
         }
     }
     
-    let offset: Double
+    var offset: Double
     let numberOfPoints: Int
     let function: Function
     
-    init(offset: Double = 0, numberOfPoints: Int = 30, function: Function = .sine) {
+    var animatableData: Double {
+        get { offset }
+        set { offset = newValue }
+    }
+    
+    /// - Parameters:
+    ///   - offset: stuff
+    init(offset: Double = 0, numberOfPoints: Int = 30, function: Function = .sine()) {
         self.offset = offset
         self.numberOfPoints = numberOfPoints
         self.function = function
@@ -46,7 +56,7 @@ struct Waves: Shape {
             to: convertedPoint(
                 CGPoint(
                     x: 0,
-                    y: function.y(for: offset)
+                    y: function.y(for: animatableData)
                 ),
                 in: waveRect
             )
@@ -60,7 +70,7 @@ struct Waves: Shape {
                 to: convertedPoint(
                     CGPoint(
                         x: x,
-                        y: function.y(for: x, offset: offset)
+                        y: function.y(for: x, offset: animatableData)
                     ),
                     in: waveRect
                 )
