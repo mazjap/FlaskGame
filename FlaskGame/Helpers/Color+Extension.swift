@@ -57,8 +57,6 @@ extension ColorRepresentable {
         let blue = Double(blue) / max
         let alpha = Double(alpha) / max
         
-        print("r\(red)g\(green)b\(blue)a\(alpha)")
-        
         self.init(
             red: red,
             green: green,

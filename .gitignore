@@ -9,3 +9,8 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 *.dSYM
+
+# Project
+FlaskGame/Resources/GoogleService-Info.plist
+FlaskGame/Resources/AdMob-Info.plist
+FlaskGame/Helpers/Hidden.swift

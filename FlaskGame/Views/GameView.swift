@@ -1,13 +1,22 @@
 import SwiftUI
 
 struct GameView: View {
-    @StateObject private var flaskController = FlaskController()
+    @Environment(\.isPhone) private var isPhone
+    @Environment(\.applicationName) private var applicationName
+    
+//    @StateObject private var adController = AdController()
+    @ObservedObject private var flaskController: FlaskController
+    @ObservedObject private var settings: SettingsController
     
     @State private var selectedIndex: Int? = nil
     @State private var showAlert: Bool = false
+    @State private var showSettings: Bool = false
     @State private var offsetWave: Bool = false
     
-    private var flaskHeight: CGFloat = UIScreen.main.bounds.height / 4
+    private var nspace: Namespace.ID
+    
+    private let flaskHeight: CGFloat = UIScreen.main.bounds.height / 4
+    private var flaskWidth: CGFloat { flaskHeight / 4 }
     private var selectionOffset: CGFloat = 20
     
     private var flaskRows: [([Flask], Set<UUID>)] {
@@ -45,10 +54,29 @@ struct GameView: View {
             }
     }
     
+    private var background: Color {
+        let def = settings.secondaryBackgroundColor
+        
+        guard settings.shouldAnimate,
+              settings.backgroundMatchesFlask,
+              let flask = flaskController.flask(at: selectedIndex)
+        else {
+            return def
+        }
+        
+        return flaskController.flask(with: flaskController.pouringFlasks[flask.id])?.topColor?.color ?? flask.topColor?.color ?? def
+    }
+    
+    init(flasks: FlaskController, settings: SettingsController, namespace: Namespace.ID) {
+        self._settings = .init(wrappedValue: settings)
+        self._flaskController = .init(wrappedValue: flasks)
+        self.nspace = namespace
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
-                Color.secondaryBackground
+                background
                     .ignoresSafeArea()
                 
                 VStack {
@@ -65,32 +93,51 @@ struct GameView: View {
                     Spacer()
                         .layoutPriority(1)
                 }
-                .overlayPreferenceValue(FlaskPreferenceKey.self) { preferences in
-                    GeometryReader { geometry in
-                        if let fromFlask = flaskController.flask(at: selectedIndex),
-                           let toFlask = flaskController.flask(with: flaskController.pouringFlasks[fromFlask.id]) {
-                            preferences.map {
-                                flaskView(for: fromFlask)
-                                    .frame(
-                                        width: geometry[$0].width,
-                                        height: geometry[$0].height
-                                    )
-                                    .offset(
-                                        x: geometry[$0].minX,
-                                        y: geometry[$0].minY
-                                    )
-                            }
-                        }
-                    }
-                }
+//                .overlayPreferenceValue(FlaskPreferenceKey.self) { preferences in
+//                    GeometryReader { geometry in
+//                        ForEach(preferences, id: \.self) { anchor in
+//                            if let fromFlask = flaskController.flask(at: selectedIndex), let anchor = preferences.last {
+//                                let (width, height, dx, dy, rotation): (CGFloat, CGFloat, CGFloat, CGFloat, Angle) = {
+//                                    let percentageComplete = min(1, Double(fromFlask.colors.count) / 4)
+//                                    let items = (
+//                                        geometry[anchor].width,
+//                                        geometry[anchor].height,
+//                                        geometry[anchor].minX - 30,
+//                                        geometry[anchor].minY + 100,
+//                                        Angle.degrees(90 * percentageComplete)
+//                                    )
+//                                    print(items)
+//
+//                                    return items
+//                                }()
+//    //                            flaskView(for: fromFlask)
+//                                Color.red
+//                                    .frame(
+//                                        width: width,
+//                                        height: height
+//                                    )
+//                                    .offset(
+//                                        x: dx,
+//                                        y: dy
+//                                    )
+//                                    .rotationEffect(rotation)
+//                                    .zIndex(2)
+//                            }
+//                        }
+//                    }
+//                }
                 .padding(.horizontal, 20)
-                .navigationTitle((Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String) ?? "Flask Me The Salt")
-                .navigationBarHidden(true)
+                .navigationTitle(applicationName)
+                .navigationBarHidden(isPhone)
                 .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
+                    ToolbarItemGroup(placement: isPhone ? .bottomBar : .automatic) {
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Label("Settings", systemImage: "gear.circle")
+                        }
+                        
                         HStack {
-                            Spacer()
-                            
                             Button {
                                 flaskController.undo()
                             } label: {
@@ -100,7 +147,7 @@ struct GameView: View {
                             Button {
                                 showAlert = true
                             } label: {
-                                Label("New Game", systemImage: "plus.app")
+                                Label("New Game", systemImage: "plus.circle")
                             }
                             
                             Button {
@@ -109,71 +156,119 @@ struct GameView: View {
                             } label: {
                                 Label("Restart", systemImage: "restart.circle")
                             }
+                            
+//                            Button {
+//                                do {
+//                                    try adController.displayAd()
+//                                } catch {
+//                                    nserror(error)
+//                                }
+//                            } label: {
+//                                Label {
+//                                    Text("New Flask")
+//                                } icon: {
+//                                    HStack {
+//                                        Image(systemName: "plus")
+//                                        FlaskShape()
+//                                            .aspectRatio(0.25, contentMode: .fit)
+//                                    }
+//                                }
+//                            }
+                            
+                            if !isPhone {
+                                Spacer()
+                            }
                         }
-                        .labelStyle(.vertical(ordered: .iconThenTitle))
                     }
                 }
-                .modifier(WinViewModifier(didWin: Binding { flaskController.didWinGame }))
-                .alert("Select Difficulty", isPresented: $showAlert, actions: {
-                    ForEach(Difficulty.allCases, id: \.rawValue) { dif in
-                        Button {
-                            newGame(difficulty: dif)
-                        } label: {
-                            Text(dif.rawValue.capitalized)
-                        }
+                .labelStyle(.vertical(ordered: .iconThenTitle))
+            }
+            .ignoresSafeArea()
+            .alert("Select Difficulty", isPresented: $showAlert, actions: {
+                ForEach(Difficulty.allCases, id: \.rawValue) { dif in
+                    Button {
+                        newGame(difficulty: dif)
+                    } label: {
+                        Text(dif.rawValue.capitalized)
                     }
-                })
+                }
+                
+                Button(role: .cancel) {
+                    showAlert = false
+                } label: {
+                    Text("Cancel")
+                }
+            })
+            .fullScreenCover(isPresented: $showSettings) {
+                SettingsView(settings: settings)
+                    .statusBar(hidden: inDebug)
             }
         }
+        .navigationViewStyle(.stack)
+        .modifier(WinViewModifier(animate: settings.shouldAnimate, didWin: Binding { flaskController.didWinGame }))
+        .statusBar(hidden: inDebug)
         .task {
-            newGame(difficulty: .easy)
+            startAnimation()
+        }
+        .onChange(of: settings.shouldAnimate) { _ in
+            startAnimation()
         }
     }
     
     private func flaskView(for flask: Flask) -> some View {
-        FlaskView(flask: flask, offsetWave: $offsetWave)
+        FlaskView(flask: flask, offsetWave: $offsetWave, defaultBackground: settings.secondaryBackgroundColor)
             .offset(y: flask.index == selectedIndex ? -selectionOffset : 0)
-            .aspectRatio(0.25, contentMode: .fit)
+            .matchedGeometryEffect(id: flask.id, in: nspace)
     }
     
     private func flaskRow<Arr>(for flasks: Arr) -> some View where Arr: RandomAccessCollection, Arr.Element == Flask {
         HStack {
+            Spacer()
+            
             ForEach(flasks) { flask in
-                flaskView(for: flask)
-                    .onTapGesture {
-                        flaskTapped(at: flask.index)
-                    }
-                    .opacity(flaskController.pouringFlasks[flask.id] == nil ? 1 : 0)
-                    .anchorPreference(key: FlaskPreferenceKey.self, value: .bounds) {
-                        guard let selectedIndex = selectedIndex,
-                              let selectedFlask = flaskController.flask(at: selectedIndex),
-                              let receivingUUID = flaskController.pouringFlasks[selectedFlask.id],
-                              flask.id == receivingUUID
-                        else {
-                            return nil
-                        }
-                        
-                        return $0
-                    }
+                GeometryReader { _ in
+//                    if flaskController.pouringFlasks[flask.id] == nil {
+                        flaskView(for: flask)
+                            .accessibilityLabel("Flask \(flask.index) \(selectedIndex == flask.index ? "selected" : ""). \(flask.colorsAccessibilityLabel)")
+                            .onTapGesture {
+                                flaskTapped(at: flask.index)
+                            }
+//                            .anchorPreference(key: FlaskPreferenceKey.self, value: .bounds) {
+//                                guard let selectedIndex = selectedIndex,
+//                                      let selectedFlask = flaskController.flask(at: selectedIndex),
+//                                      let receivingUUID = flaskController.pouringFlasks[selectedFlask.id],
+//                                      flask.id == receivingUUID
+//                                else {
+//                                    return []
+//                                }
+//
+//                                return [$0]
+//                            }
+//                    } else {
+//                        Spacer()
+//                    }
+                }
+                .frame(width: flaskWidth)
+                
+                Spacer()
             }
-            .fixedSize(horizontal: true, vertical: false)
         }
         .frame(height: flaskHeight)
     }
     
     private func flaskTapped(at index: Int) {
         guard let selectedFlask = flaskController.flask(at: index) else { return }
+        guard let previouslySelectedFlask = flaskController.flask(at: selectedIndex) else {
+            setIndex(index)
+            return
+        }
         
-        if let previouslySelectedFlask = flaskController.flask(at: selectedIndex) {
-            if previouslySelectedFlask == selectedFlask {
-                setIndex()
-            } else {
-                flaskController.dumpFlask(previouslySelectedFlask.index, into: selectedFlask.index)
-                
+        if previouslySelectedFlask == selectedFlask {
+            setIndex()
+        } else {
+            if flaskController.dumpFlask(previouslySelectedFlask.index, into: selectedFlask.index) {
                 setIndex()
             }
-        } else {
-            setIndex(index)
         }
     }
     
@@ -184,25 +279,36 @@ struct GameView: View {
     }
     
     private func newGame(difficulty: Difficulty) {
-        flaskController.newGame(difficulty: difficulty)
+        selectedIndex = nil
         offsetWave = false
-        withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
-            offsetWave = true
+        
+        flaskController.newGame(difficulty: difficulty)
+        
+        startAnimation()
+    }
+    
+    private func startAnimation() {
+        withAnimation(
+            settings.shouldAnimate
+                ? .easeInOut(duration: 2).repeatForever(autoreverses: true)
+                : .linear(duration: 0)
+        ) {
+            offsetWave = settings.shouldAnimate
         }
     }
 }
 
 struct FlaskPreferenceKey: PreferenceKey {
-    static var defaultValue: Anchor<CGRect>? = nil
+    static var defaultValue: [Anchor<CGRect>] = []
         
-    static func reduce(value: inout Anchor<CGRect>?, nextValue: () -> Anchor<CGRect>?) {
-        value = value ?? nextValue()
+    static func reduce(value: inout [Anchor<CGRect>], nextValue: () -> [Anchor<CGRect>]) {
+        value.append(contentsOf: nextValue())
     }
     
 }
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView()
+        GameView(flasks: .init(), settings: .init(store: DummyStore()), namespace: Namespace().wrappedValue)
     }
 }

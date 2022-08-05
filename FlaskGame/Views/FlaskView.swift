@@ -5,9 +5,26 @@ struct FlaskView: View {
     
     let flask: Flask
     
-    init(flask: Flask, offsetWave: Binding<Bool> = .constant(false)) {
+    private let defaultBackground: Color
+    
+    init(flask: Flask, offsetWave: Binding<Bool> = .constant(false), defaultBackground: Color? = nil) {
         self.flask = flask
+        self.defaultBackground = defaultBackground ?? .kindaClear
+        
         self._offsetWave = offsetWave
+    }
+    
+    private static var numberFormatter: NumberFormatter = {
+        let nf = NumberFormatter()
+        nf.numberStyle = .ordinal
+        return nf
+    }()
+    
+    private static func ordinalPosition(for i: Int) -> String {
+        let str = numberFormatter.string(from: NSNumber(value: i)) ?? "N/A"
+        print(str)
+        
+        return str
     }
     
     private var colors: some View {
@@ -19,11 +36,7 @@ struct FlaskView: View {
                     .map { ($0.offset, $0.element) },
                 id: \.0
             ) { (position, color) in
-                Label {
-                    Text("Color \(color.rawValue) at \(position)")
-                } icon: {
-                    color.color
-                }
+                color.color
             }
         }
         .allowsHitTesting(true)
@@ -37,16 +50,16 @@ struct FlaskView: View {
             .stroke(style: StrokeStyle(lineWidth: 0.5))
             .background(
                 GeometryReader { geometry in
-                    VStack(spacing: 0) {
-                        let colorsScale = min(1, Double(flask.colors.count) / 4)
-                        let spacerScale = 1 - colorsScale
+                    ZStack(alignment: .bottom) {
+                        defaultBackground.opacity(0.75)
                         
-                        Color.kindaClear
-                            .frame(height: geometry.size.height * spacerScale)
-                        
-                        colors
-                            .frame(height: geometry.size.height * colorsScale)
-                            .clipShape(Waves(offset: offsetWave ? .pi / 8 : 0))
+                        VStack(spacing: 0) {
+                            let colorsScale = min(1, Double(flask.colors.count) / 4)
+                            
+                            colors
+                                .frame(height: geometry.size.height * colorsScale)
+                                .clipShape(Waves(offset: offsetWave ? .pi / 8 : 0))
+                        }
                     }
                 }
                 .clipShape(shape)
@@ -58,7 +71,10 @@ struct FlaskView: View {
 
 struct FlaskView_Previews: PreviewProvider {
     static var previews: some View {
-        FlaskView(flask: Flask(colors: [.red, .green, .grey, .blue]))
+        HStack {
+            FlaskView(flask: .normal(.init(colors: [.red, .green, .grey, .blue])))
+            FlaskView(flask: .tiny(.init(.orange)))
+        }
     }
 }
 

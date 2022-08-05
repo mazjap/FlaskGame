@@ -5,12 +5,16 @@ struct WinViewModifier: ViewModifier {
     @Binding private var didWin: Bool
     @Binding private var score: Int?
     
-    init(didWin: Binding<Bool>, score: Binding<Int>) {
+    private let animate: Bool
+    
+    init(animate: Bool, didWin: Binding<Bool>, score: Binding<Int>) {
+        self.animate = animate
         self._didWin = didWin
         self._score = score.map(to: { i in Optional.some(i) })
     }
     
-    init(didWin: Binding<Bool>) {
+    init(animate: Bool, didWin: Binding<Bool>) {
+        self.animate = animate
         self._didWin = didWin
         self._score = .constant(nil)
     }
