@@ -1,7 +1,7 @@
 ### Xcode
-xcuserdata/
+xcuserdata
+xcshareddata/IDEWorkspaceChecks.plist
 *.hmap
-
 # SPM
 .build/
 

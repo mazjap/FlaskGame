@@ -65,6 +65,7 @@
 		0E22AA2128959D150019CE8E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0E22AA23289648990019CE8E /* NormalFlask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalFlask.swift; sourceTree = "<group>"; };
 		0E22AA25289648AE0019CE8E /* TinyFlask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinyFlask.swift; sourceTree = "<group>"; };
+		0E57416C289D810E0043C38B /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		0E5A0A09286DFCB10080877B /* ConfettiShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiShape.swift; sourceTree = "<group>"; };
 		0E74EF7628702F56008D3FDA /* Binding+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extension.swift"; sourceTree = "<group>"; };
 		0E74EF78287165E1008D3FDA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -113,9 +114,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E57416B289D80DB0043C38B /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				0E57416C289D810E0043C38B /* ci_pre_xcodebuild.sh */,
+			);
+			path = ci_scripts;
+			sourceTree = "<group>";
+		};
 		0E843674258B23A700652B48 = {
 			isa = PBXGroup;
 			children = (
+				0E57416B289D80DB0043C38B /* ci_scripts */,
 				0E84367F258B23A700652B48 /* FlaskGame */,
 				0E84367E258B23A700652B48 /* Products */,
 			);
