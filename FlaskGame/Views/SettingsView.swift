@@ -121,7 +121,9 @@ struct SettingsView: View {
             }
         }
         .task {
-            await settings.requestProducts()
+            if settings.tips?.isEmpty ?? true {
+                await settings.requestProducts()
+            }
         }
     }
 }

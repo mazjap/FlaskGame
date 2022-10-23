@@ -1,26 +1,8 @@
-import Foundation
 import UIKit.UIColor
 import SwiftUI
 
-enum Difficulty: String, CaseIterable {
-    case easy
-    case medium
-    case hard
-    
-    var intValue: Int {
-        switch self {
-        case .easy:
-            return 8
-        case .medium:
-            return 12
-        case .hard:
-            return 16
-        }
-    }
-}
-
 class FlaskController: ObservableObject {
-    private var previousMoves: [[Flask]] = []
+    private var previousMoves: [[UUID : NormalFlask]] = []
     private var store: SettingsStore
     
     @Published private(set) var didWinGame: Bool {
@@ -28,12 +10,16 @@ class FlaskController: ObservableObject {
             save(false)
         }
     }
-    @Published var flasks: [Flask]
+    @Published var flasks: FlaskContainer
     @Published var pouringFlasks: [UUID : UUID]
     
-    init(store: SettingsStore = UserDefaults.standard, _ difficulty: Difficulty = .medium) {
+    var extraFlask: TinyFlask? {
+        flasks.extraFlask
+    }
+    
+    init(store: SettingsStore = UserDefaults.standard, _ difficulty: Difficulty = .hard) {
         self.didWinGame = false
-        self.flasks = []
+        self.flasks = [:]
         self.pouringFlasks = [:]
         self.store = store
         
@@ -42,18 +28,18 @@ class FlaskController: ObservableObject {
     }
     
     private func addMove() {
-        previousMoves.append(flasks)
+        previousMoves.append(flasks.normalFlasks)
     }
     
-    private func resetMoves(initial: [Flask]? = nil) {
-        let value: [Flask]
+    private func resetMoves(initial: [UUID : NormalFlask]? = nil) {
+        let value: [UUID : NormalFlask]
         
         if let initial = initial {
             value = initial
         } else if let initial = previousMoves.first {
             value = initial
         } else {
-            value = []
+            value = [:]
         }
         
         previousMoves = [value]
@@ -64,7 +50,7 @@ class FlaskController: ObservableObject {
     private func hasWon() -> Bool {
         var hasWon = true
         
-        for flask in flasks {
+        for flask in flasks.values {
             guard flask.isComplete else {
                 hasWon = false
                 break
@@ -82,55 +68,47 @@ class FlaskController: ObservableObject {
     }
     
     func flask(with id: UUID?) -> Flask? {
-        flasks.first(where: { $0.id == id })
-    }
-    
-    func flask(at index: Int?) -> Flask? {
-        guard let index = index,
-              index >= 0,
-              index < flasks.count
-        else { return nil }
+        guard let id else { return nil }
         
-        return flasks[index]
+        return flasks[id]
     }
     
     func undo() {
         if let lastMove = previousMoves.last {
             previousMoves.removeLast()
-            flasks = lastMove
+            flasks.normalFlasks = lastMove
             hasWon()
         }
     }
     
     func restart() {
-        if let start = previousMoves.first {
-            flasks = start
-            resetMoves(initial: start)
-            hasWon()
+        guard let start = previousMoves.first else {
+            return
         }
+        
+        flasks.normalFlasks = start
+        resetMoves(initial: start)
+        hasWon()
     }
     
     func newGame(difficulty: Difficulty) {
         let flaskCount = difficulty.intValue
         let flaskArr = Self.generateRandom(count: flaskCount - 2)
         
-        flasks = (flaskArr + [
-            .normal(.emptyFlask(index: flaskArr.count)),
-            .normal(.emptyFlask(index: flaskArr.count + 1))
-        ])
+        flasks = FlaskContainer(flasks: (flaskArr + [.emptyFlask, .emptyFlask]).asDictionary)
         
-        resetMoves(initial: flasks)
+        resetMoves(initial: flasks.normalFlasks)
     }
     
-    func dumpFlask(_ flaskIndex: Int, into otherFlaskIndex: Int) -> Bool {
-        var flask1 = flasks[flaskIndex]
-        var flask2 = flasks[otherFlaskIndex]
-        
-        guard flask2.remainder(afterAdding: flask1.topColor, count: flask1.topColorCount) < flask1.topColorCount else {
+    func dumpFlask(_ flaskId: UUID, into otherFlaskId: UUID) -> Bool {
+        guard var flask1 = flasks[flaskId],
+              var flask2 = flasks[otherFlaskId],
+              flask2.remainder(afterAdding: flask1.topColor, count: flask1.topColorCount) < flask1.topColorCount
+        else {
             return false
         }
         
-        if flasks != previousMoves.last {
+        if flasks.normalFlasks != previousMoves.last {
             addMove()
         }
         
@@ -144,8 +122,8 @@ class FlaskController: ObservableObject {
             pouringFlasks[flask1.id] = flask2.id
         }
         
-        flasks[flaskIndex] = flask1
-        flasks[otherFlaskIndex] = flask2
+        flasks[flaskId] = flask1
+        flasks[otherFlaskId] = flask2
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             withAnimation {
                 _ = self?.pouringFlasks.removeValue(forKey: flask1.id)
@@ -160,7 +138,7 @@ class FlaskController: ObservableObject {
     func save(_ bool: Bool = true) {
         if bool {
             store.set(
-                flasks.map { $0.stringRepresentation },
+                flasks.values.map { $0.stringRepresentation },
                 for: Self.gameKey
             )
         } else {
@@ -173,7 +151,7 @@ class FlaskController: ObservableObject {
 
         guard let repArr: [[String]] = store.get(using: Self.gameKey) else { return }
 
-        let (flaskArr, isValid) = repArr.enumerated().reduce(([Flask](), true)) { result, enumeration in
+        let (flaskArr, isValid) = repArr.reduce(([Flask](), true)) { result, colorArray in
             let def = ([Flask](), false)
 
             if !result.1 {
@@ -181,9 +159,8 @@ class FlaskController: ObservableObject {
             }
 
             var flaskColors = [FlaskColor]()
-            let flaskIndex = enumeration.offset
             
-            var colors = enumeration.element
+            var colors = colorArray
             let flask: Flask
             
             switch colors.last {
@@ -200,7 +177,7 @@ class FlaskController: ObservableObject {
                     color = nil
                 }
                 
-                flask = .tiny(.init(color, index: flaskIndex))
+                flask = .tiny(.init(color))
             case "n":
                 _ = colors.popLast()
                 fallthrough
@@ -212,7 +189,7 @@ class FlaskController: ObservableObject {
                     flaskColors.append(color)
                 }
                 
-                flask = .normal(.init(colors: flaskColors, index: flaskIndex))
+                flask = .normal(.init(colors: flaskColors))
             }
             
             return (result.0 + [flask], result.1)
@@ -227,12 +204,14 @@ class FlaskController: ObservableObject {
         }) else {
             return
         }
+        
+        let container = FlaskContainer(flasks: flaskArr)
 
-        resetMoves(initial: flaskArr)
-        flasks = flaskArr
+        resetMoves(initial: container.normalFlasks)
+        flasks = container
     }
     
-    static func generateRandom(count: Int = 12) -> [Flask] {
+    static func generateRandom(count: Int = 12) -> [NormalFlask] {
         // Get colors for all flasks and make 4 randomized color arrays
         let colors: [[FlaskColor]] = {
             var colors = Array(repeating: generateColors(count: count), count: 4)
@@ -252,7 +231,7 @@ class FlaskController: ObservableObject {
         }()
         
         return (0..<colors[0].count).map {
-            .normal(.init(
+            .init(
                 colors: [
                     colors[0][$0],
                     colors[1][$0],
@@ -260,7 +239,7 @@ class FlaskController: ObservableObject {
                     colors[3][$0]
                 ],
                 index: $0
-            ))
+            )
         }
     }
     
@@ -273,4 +252,39 @@ class FlaskController: ObservableObject {
     }
     
     private static let gameKey = "cgv-flask_master" // Current Game Value
+}
+
+extension FlaskController: AdControllerDelegate {
+    func giveReward() {
+        let tinyFlask = TinyFlask()
+        
+        flasks[tinyFlask.id] = .tiny(tinyFlask)
+    }
+}
+
+extension Sequence where Element: Identifiable {
+    var asDictionary: [Element.ID : Element] {
+        reduce(into: [Element.ID : Element]()) { $0[$1.id] = $1 }
+    }
+}
+
+extension Sequence {
+    static func + <RHS>(lhs: Self, rhs: RHS) -> [Element] where RHS: Sequence, RHS.Element == Element {
+        lhs.map { $0 } + rhs.map { $0 }
+    }
+    
+    func count(where match: @escaping (Element) -> Bool) -> Int {
+        var count = 0
+        for element in self {
+            if match(element) {
+                count += 1
+            }
+        }
+        
+        return count
+    }
+    
+    var asArray: [Element] {
+        self + []
+    }
 }

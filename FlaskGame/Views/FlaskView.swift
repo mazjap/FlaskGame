@@ -54,7 +54,13 @@ struct FlaskView: View {
                         defaultBackground.opacity(0.75)
                         
                         VStack(spacing: 0) {
-                            let colorsScale = min(1, Double(flask.colors.count) / 4)
+                            let colorsScale: Double = {
+                                if case .normal = flask {
+                                    return min(1, Double(flask.colors.count) / 4)
+                                } else {
+                                    return 0.75
+                                }
+                            }()
                             
                             colors
                                 .frame(height: geometry.size.height * colorsScale)

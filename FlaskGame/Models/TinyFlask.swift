@@ -3,12 +3,10 @@ import Foundation
 struct TinyFlask: Identifiable, Equatable {
     private(set) var color: FlaskColor?
     
-    let id: UUID = UUID()
-    var index: Int
+    let id: UUID = FlaskOrder.extra.uuid()
     
-    init(_ color: FlaskColor?, index: Int = 0) {
+    init(_ color: FlaskColor? = nil) {
         self.color = color
-        self.index = index
     }
     
     // MARK: - Function
@@ -28,7 +26,7 @@ struct TinyFlask: Identifiable, Equatable {
     mutating func addColor(_ newColor: FlaskColor?, count: Int = 1) -> Int {
         guard let newColor = newColor else { return count }
         
-        let remainder = remainder(afterAdding: color, count: count)
+        let remainder = remainder(afterAdding: newColor, count: count)
         if remainder < count {
             color = newColor
         }

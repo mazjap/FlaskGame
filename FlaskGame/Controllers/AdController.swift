@@ -1,20 +1,21 @@
 import SwiftUI
 import GoogleMobileAds
 
+protocol AdControllerDelegate: AnyObject {
+    func giveReward()
+}
+
 class AdController: NSObject, ObservableObject {
-    @MainActor
-    @Published var extraFlask = false
     @MainActor
     @Published var isDisplayingAd = false
     
-    private var additionalFlaskAd: GADRewardedAd!
+    weak var delegate: AdControllerDelegate?
+    
+    @MainActor
+    private(set) var additionalFlaskAd: GADRewardedAd!
     
     private var newFlaskId: String {
         let test = "ca-app-pub-3940256099942544/1712485313"
-        
-        if inDebug {
-            return test
-        }
         
         guard let url = Bundle.main.url(forResource: "AdMob-Info", withExtension: "plist"),
               let plist = NSDictionary(contentsOf: url) else {
@@ -22,19 +23,6 @@ class AdController: NSObject, ObservableObject {
         }
         
         return (plist.object(forKey: "new_flask_key") as? String) ?? test
-    }
-
-    
-    override init() {
-        super.init()
-        
-        Task {
-            do {
-                try await refreshAd()
-            } catch {
-                nserror(error)
-            }
-        }
     }
     
     @MainActor
@@ -66,28 +54,42 @@ class AdController: NSObject, ObservableObject {
     }
     
     @MainActor
-    private func addExtraFlask() {
-        self.extraFlask = true
+    private func giveReward() {
+        delegate?.giveReward()
     }
     
-    private func asyncRefreshAd() {
-//        Task.detached {
-//            do {
-//                try await self.refreshAd()
-//            } catch {
-//                nserror(error)
-//            }
-//        }
+    func asyncRefreshAd(errorHandler: (@MainActor (Error) -> Void)? = nil) {
+        Task.detached {
+            do {
+                try await self.refreshAd()
+            } catch {
+                let handler = errorHandler ?? { error in
+                    nserror(error)
+                }
+                await handler(error)
+            }
+        }
     }
     
-    private func refreshAd() async throws {
-//        additionalFlaskAd = try await GADRewardedAd.load(withAdUnitID: newFlaskId, request: .init())
-//        additionalFlaskAd.fullScreenContentDelegate = self
-//        additionalFlaskAd.adMetadataDelegate = self
-//        additionalFlaskAd.paidEventHandler = { value in
-//            print("Ad value: \(value.value)")
-//            print("Ad percision: \(value.precision)")
-//        }
+    @MainActor
+    func refreshAd(retryCount: UInt = 2) async throws {
+        do {
+            additionalFlaskAd = try await GADRewardedAd.load(withAdUnitID: newFlaskId, request: .init())
+            additionalFlaskAd.fullScreenContentDelegate = self
+            additionalFlaskAd.adMetadataDelegate = self
+            additionalFlaskAd.paidEventHandler = { value in
+                print("Ad value: \(value.value)")
+                print("Ad percision: \(value.precision)")
+            }
+        } catch {
+            if retryCount > 0 {
+                try await refreshAd(retryCount: retryCount - 1)
+            } else if error.localizedDescription == "Request Error: No ad to show from all configured ad networks." {
+                throw AppError.noAds("If you have an adblocker, try disabling it")
+            } else {
+                throw error
+            }
+        }
     }
 }
 
@@ -97,14 +99,17 @@ extension AdController: GADFullScreenContentDelegate {
     }
     
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        nslog("Displaying ad to user...")
+        nslog("Dismissing ad")
         Task {
             await self.toggleDisplayingAd(false)
+            self.asyncRefreshAd()
         }
     }
     
+    @MainActor
     func adDidRecordImpression(_ ad: GADFullScreenPresentingAd) {
-        nslog("Ad impression")
+        nslog("Ad was impressive")
+        giveReward()
     }
     
     func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {

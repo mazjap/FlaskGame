@@ -1,22 +1,16 @@
 import SwiftUI
 
-struct WinViewModifier: ViewModifier {
+struct FallingConfettiModifier: ViewModifier {
     @State private var confettiCannon = ConfettiCannon(filled: false, confettiDuration: Self.duration)
     @Binding private var didWin: Bool
     @Binding private var score: Int?
     
     private let animate: Bool
     
-    init(animate: Bool, didWin: Binding<Bool>, score: Binding<Int>) {
+    init(animate: Bool, didWin: Binding<Bool>, score: Binding<Int?> = .constant(nil)) {
         self.animate = animate
         self._didWin = didWin
-        self._score = score.map(to: { i in Optional.some(i) })
-    }
-    
-    init(animate: Bool, didWin: Binding<Bool>) {
-        self.animate = animate
-        self._didWin = didWin
-        self._score = .constant(nil)
+        self._score = score
     }
     
     func body(content: Content) -> some View {

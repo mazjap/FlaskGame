@@ -9,8 +9,7 @@ struct NormalFlask: Equatable, Identifiable {
     
     
     // Public
-    let id: UUID = UUID()
-    var index: Int
+    let id: UUID
     
     var topColor: FlaskColor? {
         colors.last
@@ -61,12 +60,14 @@ struct NormalFlask: Equatable, Identifiable {
             self.colors = colors
         }
         
-        self.index = index
+        let order: FlaskOrder = colors.isEmpty ? .end : .normal
+        
+        self.id = order.uuid()
     }
     
     init(_ color: FlaskColor, index: Int = 0) {
         self.colors = [FlaskColor](repeating: color, count: 4)
-        self.index = index
+        self.id = FlaskOrder.normal.uuid()
     }
     
     // MARK: - Functions
@@ -104,17 +105,8 @@ struct NormalFlask: Equatable, Identifiable {
         NormalFlask(colors: [])
     }
     
-    // Functions
-    static func emptyFlask(index: Int) -> Self {
-        var flask = emptyFlask
-        flask.index = index
-        
-        return flask
-    }
-    
     static func == (lhs: NormalFlask, rhs: NormalFlask) -> Bool {
         return lhs.id == rhs.id &&
-            lhs.index == rhs.index &&
-            lhs.colors == rhs.colors
+                lhs.colors == rhs.colors
     }
 }
