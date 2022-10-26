@@ -1,6 +1,6 @@
 import Foundation
 
-struct FlaskContainer: ExpressibleByDictionaryLiteral {
+struct FlaskContainer: ExpressibleByDictionaryLiteral, Equatable {
     var extraFlask: TinyFlask?
     var normalFlasks: [UUID : NormalFlask]
     

@@ -2,7 +2,7 @@ import UIKit.UIColor
 import SwiftUI
 
 class FlaskController: ObservableObject {
-    private var previousMoves: [[UUID : NormalFlask]] = []
+    private var previousMoves: [FlaskContainer] = []
     private var store: SettingsStore
     
     @Published private(set) var didWinGame: Bool {
@@ -28,11 +28,11 @@ class FlaskController: ObservableObject {
     }
     
     private func addMove() {
-        previousMoves.append(flasks.normalFlasks)
+        previousMoves.append(flasks)
     }
     
-    private func resetMoves(initial: [UUID : NormalFlask]? = nil) {
-        let value: [UUID : NormalFlask]
+    private func resetMoves(initial: FlaskContainer? = nil) {
+        let value: FlaskContainer
         
         if let initial = initial {
             value = initial
@@ -74,19 +74,29 @@ class FlaskController: ObservableObject {
     }
     
     func undo() {
-        if let lastMove = previousMoves.last {
+        if var lastMove = previousMoves.last {
             previousMoves.removeLast()
-            flasks.normalFlasks = lastMove
+            
+            if lastMove.extraFlask == nil && flasks.extraFlask != nil {
+                lastMove.extraFlask = TinyFlask()
+            }
+            
+            flasks = lastMove
+            
             hasWon()
         }
     }
     
     func restart() {
-        guard let start = previousMoves.first else {
+        guard var start = previousMoves.first else {
             return
         }
         
-        flasks.normalFlasks = start
+        if start.extraFlask == nil && flasks.extraFlask != nil {
+            start.extraFlask = TinyFlask()
+        }
+        
+        flasks = start
         resetMoves(initial: start)
         hasWon()
     }
@@ -97,7 +107,7 @@ class FlaskController: ObservableObject {
         
         flasks = FlaskContainer(flasks: (flaskArr + [.emptyFlask, .emptyFlask]).asDictionary)
         
-        resetMoves(initial: flasks.normalFlasks)
+        resetMoves(initial: flasks)
     }
     
     func dumpFlask(_ flaskId: UUID, into otherFlaskId: UUID) -> Bool {
@@ -108,7 +118,7 @@ class FlaskController: ObservableObject {
             return false
         }
         
-        if flasks.normalFlasks != previousMoves.last {
+        if flasks != previousMoves.last {
             addMove()
         }
         
@@ -207,7 +217,7 @@ class FlaskController: ObservableObject {
         
         let container = FlaskContainer(flasks: flaskArr)
 
-        resetMoves(initial: container.normalFlasks)
+        resetMoves(initial: container)
         flasks = container
     }
     
