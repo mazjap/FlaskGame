@@ -22,7 +22,7 @@ class AdController: NSObject, ObservableObject {
             return test
         }
         
-        return (plist.object(forKey: "new_flask_key") as? String) ?? test
+        return (plist.object(forKey: "new-flask-key") as? String) ?? test
     }
     
     @MainActor

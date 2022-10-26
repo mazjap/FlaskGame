@@ -55,6 +55,24 @@ enum Tip: String, CaseIterable {
             return "$10 Tip"
         }
     }
+    
+    var thankYou: String {
+        switch self {
+        case .generous: return "Thank you for your support!"
+        case .veryGenerous: return "You make the world a better place"
+        case .extremelyGenerous: return "You're an absolute legend!"
+        case .generousityOverload: return "Your generosity means the world to me!"
+        }
+    }
+    
+    var emoji: String {
+        switch self {
+        case .generous: return "😀"
+        case .veryGenerous: return "🥹"
+        case .extremelyGenerous: return "🫵"
+        case .generousityOverload: return "😮"
+        }
+    }
 }
 
 class SettingsController: ObservableObject {
@@ -69,6 +87,9 @@ class SettingsController: ObservableObject {
     // Public
     @MainActor
     @Published var tips: [Product]? = nil
+    
+    @MainActor
+    @Published var purchase: Tip?
     
     @Published var backgroundMatchesFlaskValue: Bool {
         didSet {
@@ -171,10 +192,26 @@ class SettingsController: ObservableObject {
         }
     }
     
+    @MainActor
     func purchase(_ product: Product) async -> StoreKit.Transaction? {
         do {
-            let result = try await product.purchase()
-            return nil
+            switch try await product.purchase() {
+            case let .success(verification):
+                if let tip = Tip(rawValue: product.id) {
+                    withAnimation {
+                        self.purchase = tip
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        withAnimation {
+                            self.purchase = nil
+                        }
+                    }
+                }
+                return try verification.payloadValue
+            default:
+                return nil
+            }
         } catch {
             nserror(error)
             return nil
