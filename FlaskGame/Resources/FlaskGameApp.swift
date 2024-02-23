@@ -49,8 +49,7 @@ struct IsPhoneKey: EnvironmentKey {
 }
 
 struct ApplicationNameKey: EnvironmentKey {
-    static var defaultValue: String { Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "Flask Master"
-    }
+    static var defaultValue: String { AppConstants.name ?? "Flask Master" }
 }
 
 extension EnvironmentValues {
