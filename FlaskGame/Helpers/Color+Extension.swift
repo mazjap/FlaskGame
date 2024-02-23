@@ -96,12 +96,7 @@ extension UIColor: ColorRepresentable {
     static let tertiaryLabel = UIColor(named: "std_tertiary_label")!
     
     static let cssColors = [
-        "black" : "#000000", "silver" : "#C0C0C0", "gray" : "#808080",
-        "white" : "#FFFFFF", "maroon" : "#800000", "red" : "#FF0000",
-        "purple" : "#800080", "fuchsia" : "#FF00FF", "green" : "#008000",
-        "lime" : "#00FF00", "olive" : "#808000", "yellow" : "#FFFF00",
-        "navy" : "#000080", "blue" : "#0000FF", "teal" : "#008080",
-        "aqua" : "#00FFFF", "aliceblue" : "#f0f8ff", "antiquewhite" : "#faebd7",
+        "aliceblue" : "#f0f8ff", "antiquewhite" : "#faebd7",
         "aqua" : "#00ffff", "aquamarine" : "#7fffd4", "azure" : "#f0ffff",
         "beige" : "#f5f5dc", "bisque" : "#ffe4c4", "black" : "#000000",
         "blanchedalmond" : "#ffebcd", "blue" : "#0000ff", "blueviolet" : "#8a2be2",
