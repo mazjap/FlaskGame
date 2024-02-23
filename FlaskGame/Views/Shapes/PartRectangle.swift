@@ -88,20 +88,18 @@ struct PartRectangle: Shape {
     }
 }
 
-struct PartRectangle_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            PartRectangle(completion: 0.5)
-                .stroke(Color.red)
-                .background(Color.gray.clipShape(Rectangle()))
-            
-            PartRectangle(verticalCompletion: 0.5, alignedTo: .bottom)
-                .stroke(Color.red)
-                .background(Color.gray.clipShape(Rectangle()))
-            
-            PartRectangle(verticalCompletion: 0.5, alignedTo: .top)
-                .stroke(Color.red)
-                .background(Color.gray.clipShape(Rectangle()))
-        }
+#Preview {
+    VStack {
+        PartRectangle(completion: 0.5)
+            .stroke(Color.red)
+            .background(Color.gray.clipShape(Rectangle()))
+        
+        PartRectangle(verticalCompletion: 0.5, alignedTo: .bottom)
+            .stroke(Color.red)
+            .background(Color.gray.clipShape(Rectangle()))
+        
+        PartRectangle(verticalCompletion: 0.5, alignedTo: .top)
+            .stroke(Color.red)
+            .background(Color.gray.clipShape(Rectangle()))
     }
 }

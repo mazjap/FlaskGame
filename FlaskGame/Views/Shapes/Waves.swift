@@ -2,7 +2,7 @@ import SwiftUI
 
 struct Waves: Shape {
     enum Function {
-        case sine(peaksTroughsCount: CGFloat = 5, verticalTranslation: CGFloat = 1, scale: CGFloat = 0.5)
+        case sine(peaksTroughsCount: CGFloat = 5, verticalTranslation: CGFloat = 0, scale: CGFloat = 0.5)
         case custom((CGFloat) -> CGFloat)
         
         /// Performs some transformation to a value (0...1).
@@ -91,29 +91,25 @@ struct Waves: Shape {
     }
 }
 
-struct Waves_Previews: PreviewProvider {
+#Preview {
     struct Test: View {
-        @State var value: Double = 1
+        @State var value: Double = 0
         
         var body: some View {
             VStack {
-                Waves(offset: value)
-                    .stroke(Color.red)
-                    .scaleEffect(0.95)
+                HStack {
+                    Waves(offset: value)
+                        .stroke(Color.red)
+                
+                    Waves(offset: value)
+                        .fill(Color.red)
+                        .background(Color.gray.clipShape(Rectangle()))
+                }
                 
                 Slider(value: $value, in: 0...5)
             }
         }
     }
     
-    static var previews: some View {
-        HStack {
-            Test()
-            
-            Color.red
-                .clipShape(Waves())
-//                .stroke(Color.red)
-                .background(Color.gray.clipShape(Rectangle()))
-        }
-    }
+    return Test()
 }

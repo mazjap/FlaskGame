@@ -55,11 +55,11 @@ struct SettingsView: View {
                         Text("Animations & Performance")
                     }
                     
-                    //                Section {
-                    //
-                    //                } header: {
-                    //                    Text("Theme")
-                    //                }
+//                    Section {
+//
+//                    } header: {
+//                        Text("Theme")
+//                    }
                     
                     Section {
                         Text("👋 I make free games and apps without In-App Purchases - aside from tips. Consider rating if you enjoy this game (or leave feedback if you don't)!")
@@ -149,10 +149,8 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView(settings: SettingsController(store: DummyStore()))
-    }
+#Preview {
+    SettingsView(settings: SettingsController(store: DummyStore()))
 }
 
 indirect

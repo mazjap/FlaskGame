@@ -47,9 +47,7 @@ struct FlaskShape: Shape {
 }
 
 
-struct FlaskShape_Previews: PreviewProvider {
-    static var previews: some View {
-        FlaskShape()
-            .stroke(style: StrokeStyle(lineWidth: 1))
-    }
+#Preview {
+    FlaskShape()
+        .stroke(style: StrokeStyle(lineWidth: 1))
 }

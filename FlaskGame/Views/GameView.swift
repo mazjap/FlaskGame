@@ -45,23 +45,10 @@ struct GameView: View {
         return flasks
             .sorted(by: { $0.id.uuidString > $1.id.uuidString })
             .enumerated()
-            .reduce(
-                into: Array(
-                    repeating: [Flask](),
-                    count: rowCount
-                ), { arr, flask in
-                    arr[flask.offset / rowLimit].append(flask.element)
-                }
-            )
-            .map {
-                (
-                    $0,
-                    $0.reduce(
-                        into: Set<UUID>(),
-                        { $0.insert($1.id) }
-                    )
-                )
+            .reduce(into: Array(repeating: [Flask](), count: rowCount)) { arr, flask in
+                arr[flask.offset / rowLimit].append(flask.element)
             }
+            .map { ($0, $0.reduce(into: Set<UUID>()) { $0.insert($1.id) }) }
     }
     
     private var background: Color {
@@ -108,68 +95,13 @@ struct GameView: View {
                 .navigationBarHidden(isPhone)
                 .toolbar {
                     ToolbarItemGroup(placement: isPhone ? .bottomBar : .automatic) {
-                        HStack {
-                            let showAdOption = flaskController.extraFlask == nil && adController.additionalFlaskAd != nil && alertError == nil
-                            
-                            Button {
-                                showSettings = true
-                            } label: {
-                                Label("Settings", systemImage: "gear.circle")
-                            }
-                            
-                            Spacer()
-                                .layoutPriority(showAdOption ? 0 : 1)
-                            
-                            Button {
-                                flaskController.undo()
-                            } label: {
-                                Label("Undo", systemImage: "arrow.uturn.backward.circle")
-                            }
-                            
-                            Spacer()
-                                .layoutPriority(0)
-                            
-                            Button {
-                                showNewGameAlert = true
-                            } label: {
-                                Label("New Game", systemImage: "plus.circle")
-                            }
-                            
-                            Spacer()
-                                .layoutPriority(0)
-                            
-                            Button {
-                                setId()
-                                flaskController.restart()
-                            } label: {
-                                Label("Restart", systemImage: "restart.circle")
-                            }
-                            
-                            Spacer()
-                                .layoutPriority(0)
-                            
-                            if showAdOption {
-                                Button {
-                                    do {
-                                        try adController.displayAd()
-                                    } catch {
-                                        nserror(error)
-                                    }
-                                } label: {
-                                    Label {
-                                        Text("Add Flask")
-                                    } icon: {
-                                        Image("new.flask")
-                                    }
-                                }
-                            }
-                        }
+                        toolbarContent
                     }
                 }
                 .labelStyle(.vertical(ordered: .iconThenTitle))
             }
             .ignoresSafeArea()
-            .alert("Select Difficulty", isPresented: $showNewGameAlert, actions: {
+            .alert("Select Difficulty", isPresented: $showNewGameAlert) {
                 ForEach(Difficulty.allCases, id: \.rawValue) { dif in
                     Button {
                         newGame(difficulty: dif)
@@ -183,14 +115,17 @@ struct GameView: View {
                 } label: {
                     Text("Cancel")
                 }
-            })
+            }
             .fullScreenCover(isPresented: $showSettings) {
                 SettingsView(settings: settings)
                     .statusBar(hidden: inDebug)
             }
         }
         .navigationViewStyle(.stack)
-        .modifier(FallingConfettiModifier(animate: settings.shouldAnimate, didWin: Binding { flaskController.didWinGame }))
+        .modifier(FallingConfettiModifier(
+            animate: settings.shouldAnimate,
+            didWin: Binding { flaskController.didWinGame }
+        ))
         .statusBar(hidden: inDebug)
         .task {
             adController.delegate = flaskController
@@ -203,6 +138,65 @@ struct GameView: View {
         }
         .onChange(of: settings.shouldAnimate) { _ in
             startAnimation()
+        }
+    }
+    
+    private var toolbarContent: some View {
+        HStack {
+            let showAdOption = flaskController.extraFlask == nil && adController.additionalFlaskAd != nil && alertError == nil
+            
+            Button {
+                showSettings = true
+            } label: {
+                Label("Settings", systemImage: "gear.circle")
+            }
+            
+            Spacer()
+                .layoutPriority(showAdOption ? 0 : 1)
+            
+            Button {
+                flaskController.undo()
+            } label: {
+                Label("Undo", systemImage: "arrow.uturn.backward.circle")
+            }
+            
+            Spacer()
+                .layoutPriority(0)
+            
+            Button {
+                showNewGameAlert = true
+            } label: {
+                Label("New Game", systemImage: "plus.circle")
+            }
+            
+            Spacer()
+                .layoutPriority(0)
+            
+            Button {
+                setId()
+                flaskController.restart()
+            } label: {
+                Label("Restart", systemImage: "restart.circle")
+            }
+            
+            Spacer()
+                .layoutPriority(0)
+            
+            if showAdOption {
+                Button {
+                    do {
+                        try adController.displayAd()
+                    } catch {
+                        nserror(error)
+                    }
+                } label: {
+                    Label {
+                        Text("Add Flask")
+                    } icon: {
+                        Image("new.flask")
+                    }
+                }
+            }
         }
     }
     
@@ -293,8 +287,6 @@ struct FlaskPreferenceKey: PreferenceKey {
     
 }
 
-struct GameView_Previews: PreviewProvider {
-    static var previews: some View {
-        GameView(flasks: .init(), settings: .init(store: DummyStore()), namespace: Namespace().wrappedValue)
-    }
+#Preview {
+    GameView(flasks: .init(), settings: .init(store: DummyStore()), namespace: Namespace().wrappedValue)
 }
