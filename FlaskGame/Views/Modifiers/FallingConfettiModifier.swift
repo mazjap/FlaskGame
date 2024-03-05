@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FallingConfettiModifier: ViewModifier {
-    @State private var confettiCannon = ConfettiCannon(filled: false, confettiDuration: Self.duration)
+    @State private var confettiCannon = ConfettiCannon(filled: false, confettiPerCycle: 2, confettiDuration: Self.duration)
     @Binding private var didWin: Bool
     @Binding private var score: Int?
     
@@ -18,21 +18,7 @@ struct FallingConfettiModifier: ViewModifier {
             content
             
             if didWin {
-                VStack {
-                    Text("You Won!")
-                        .font(.system(size: 500))
-                        .minimumScaleFactor(0.01)
-                    
-                    if let score = score {
-                        Text("Score: \(score)")
-                            .font(Font.headline)
-                    }
-                }
-                .lineLimit(1)
-                .padding(20)
-                .foregroundColor(.primaryLabel)
-                
-                GeometryReader { geometry in
+                Group {
                     TimelineView(.animation) { timeline in
                         Canvas { context, size in
                             let current = timeline.date.timeIntervalSinceReferenceDate
@@ -41,7 +27,7 @@ struct FallingConfettiModifier: ViewModifier {
                             for confetti in confettiCannon.confetti {
                                 guard let symbol = context.resolveSymbol(id: confetti.symbolId) else { continue }
                                 
-                                let dy = (timeline.date.timeIntervalSinceReferenceDate - confetti.createdAt) / Self.duration * confetti.velocity * size.height
+                                let dy = (current - confetti.createdAt) / Self.duration * confetti.velocity * size.height
                                 
                                 context.draw(
                                     symbol,
@@ -61,14 +47,28 @@ struct FallingConfettiModifier: ViewModifier {
                                             confettiType.stroked
                                         }
                                     }
+                                    .frame(width: 12, height: 12)
                                     .tag(color.rawValue + confettiType.id)
                                 }
                                 .foregroundColor(color.color)
                             }
                             .scaledToFit()
-                            .frame(width: 10, height: 10)
                         }
                     }
+                    
+                    VStack {
+                        Text("You Won!")
+                            .font(.system(size: 500))
+                            .minimumScaleFactor(0.01)
+                        
+                        if let score = score {
+                            Text("Score: \(score)")
+                                .font(Font.headline)
+                        }
+                    }
+                    .lineLimit(1)
+                    .padding(20)
+                    .foregroundColor(.primaryLabel)
                 }
                 .allowsHitTesting(false)
                 .ignoresSafeArea(edges: .all)
@@ -79,5 +79,12 @@ struct FallingConfettiModifier: ViewModifier {
         }
     }
     
-    static let duration = 3.0
+    static let duration = 4.0
+}
+
+
+#Preview {
+    Color.white
+        .ignoresSafeArea()
+        .modifier(FallingConfettiModifier(animate: true, didWin: .constant(true)))
 }

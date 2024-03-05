@@ -11,14 +11,14 @@ class ConfettiCannon {
         self.point = point
         self.filled = filled
         self.confettiPerCycle = confettiPerCycle
-        self.confettiDuration = 2
+        self.confettiDuration = confettiDuration
     }
     
     func update(using date: TimeInterval) {
         let r = 0.5
         let range = -r...r
         
-        confetti = confetti.filter({ return confettiDuration - (date - $0.createdAt) >= 0 })
+        confetti = confetti.filter { confettiDuration - (date - $0.createdAt) >= 0 }
         
         for _ in 0..<confettiPerCycle {
             confetti.insert(Confetti(
