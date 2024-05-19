@@ -4,27 +4,13 @@ struct FlaskView: View {
     @Binding private var offsetWave: Bool
     
     let flask: Flask
+    let isSelected: Bool
     
-    private let defaultBackground: Color
-    
-    init(flask: Flask, offsetWave: Binding<Bool> = .constant(false), defaultBackground: Color? = nil) {
+    init(flask: Flask, isSelected: Bool = false, offsetWave: Binding<Bool> = .constant(false)) {
         self.flask = flask
-        self.defaultBackground = defaultBackground ?? .kindaClear
+        self.isSelected = isSelected
         
         self._offsetWave = offsetWave
-    }
-    
-    private static var numberFormatter: NumberFormatter = {
-        let nf = NumberFormatter()
-        nf.numberStyle = .ordinal
-        return nf
-    }()
-    
-    private static func ordinalPosition(for i: Int) -> String {
-        let str = numberFormatter.string(from: NSNumber(value: i)) ?? "N/A"
-        print(str)
-        
-        return str
     }
     
     private var colors: some View {
@@ -47,11 +33,13 @@ struct FlaskView: View {
         let shape = FlaskShape()
         
         shape
-            .stroke(style: StrokeStyle(lineWidth: 0.5))
+            .stroke(.black, lineWidth: isSelected ? 6 : 2)
+            .stroke(isSelected ? .white : .black, lineWidth: isSelected ? 2 : 0)
             .background(
                 GeometryReader { geometry in
                     ZStack(alignment: .bottom) {
-                        defaultBackground.opacity(0.75)
+                        Rectangle()
+                            .fill(Material.regular)
                         
                         VStack(spacing: 0) {
                             let colorsScale: Double = {
@@ -81,27 +69,5 @@ struct FlaskView_Previews: PreviewProvider {
             FlaskView(flask: .normal(.init(colors: [.red, .green, .grey, .blue])))
             FlaskView(flask: .tiny(.init(.orange)))
         }
-    }
-}
-
-extension CGRect {
-    init(p1: CGPoint, p2: CGPoint) {
-        let startPoint = CGPoint(x: min(p1.x, p2.x), y: min(p1.x, p2.x))
-        let width = abs(p1.x - p2.x)
-        let height = abs(p1.y - p2.y)
-        
-        self.init(x: startPoint.x, y: startPoint.y, width: width, height: height)
-    }
-    
-    init<FP: BinaryFloatingPoint>(x1: FP, y1: FP, x2: FP, y2: FP) {
-        self.init(
-            p1: CGPoint(
-                x: CGFloat(x1),
-                y: CGFloat(y1)),
-            p2: CGPoint(
-                x: CGFloat(x2),
-                y: CGFloat(y2)
-            )
-        )
     }
 }
