@@ -32,13 +32,8 @@ class AdController: NSObject, ObservableObject {
             throw AppError.noData("Ad not yet loaded")
         }
         
-        guard let rootVC = UIApplication.shared.rootViewController else {
-            throw AppError.selfNil("Unable to get rootVC")
-        }
-        
-        try additionalFlaskAd.canPresent(fromRootViewController: rootVC)
-        
-        additionalFlaskAd.present(fromRootViewController: rootVC) {
+        try additionalFlaskAd.canPresent(fromRootViewController: nil)
+        additionalFlaskAd.present(fromRootViewController: nil) {
             print("Ad has been presented")
         }
     }
@@ -66,20 +61,20 @@ class AdController: NSObject, ObservableObject {
                 let handler = errorHandler ?? { error in
                     nserror(error)
                 }
+                
                 await handler(error)
             }
         }
     }
     
-    @MainActor
     func refreshAd(retryCount: UInt = 2) async throws {
         do {
-            additionalFlaskAd = try await GADRewardedAd.load(withAdUnitID: newFlaskId, request: .init())
-            additionalFlaskAd.fullScreenContentDelegate = self
-            additionalFlaskAd.adMetadataDelegate = self
-            additionalFlaskAd.paidEventHandler = { value in
-                print("Ad value: \(value.value)")
-                print("Ad percision: \(value.precision)")
+            let newAd = try await GADRewardedAd.load(withAdUnitID: newFlaskId, request: .init())
+            newAd.fullScreenContentDelegate = self
+            newAd.adMetadataDelegate = self
+            
+            await MainActor.run {
+                self.additionalFlaskAd = newAd
             }
         } catch {
             if retryCount > 0 {
