@@ -31,6 +31,7 @@ struct FlaskView: View {
     
     var body: some View {
         let shape = FlaskShape()
+        let aspectRatio: Double = if case .normal = flask { 0.25 } else { 1 }
         
         shape
             .stroke(.black, lineWidth: isSelected ? 6 : 2)
@@ -42,13 +43,13 @@ struct FlaskView: View {
                             .fill(Material.regular)
                         
                         VStack(spacing: 0) {
-                            let colorsScale: Double = {
+                            let colorsScale: Double =
                                 if case .normal = flask {
-                                    return min(1, Double(flask.colors.count) / 4)
+                                    min(1, Double(flask.colors.count) / 4)
                                 } else {
-                                    return 0.75
+                                    1
                                 }
-                            }()
+                            
                             
                             colors
                                 .frame(height: geometry.size.height * colorsScale)
@@ -60,6 +61,7 @@ struct FlaskView: View {
             )
             .contentShape(shape)
             .transition(.identity)
+            .aspectRatio(aspectRatio, contentMode: .fit)
     }
 }
 

@@ -128,7 +128,7 @@ class FlaskController: ObservableObject {
             
             // Remove the top color from flask1 as many times as could fit in flask2
             flask1.removeTop(flask1.topColorCount - remainder)
-        
+            
             pouringFlasks[flask1.id] = flask2.id
         }
         

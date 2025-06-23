@@ -186,23 +186,13 @@ struct GameView: View {
     }
     
     private func flaskView(for flask: Flask) -> some View {
-        let aspectRatio: Double = {
-            switch flask {
-            case .tiny:
-                return 1
-            case .normal:
-                return 0.25
-            }
-        }()
-        
-        return FlaskView(
+        FlaskView(
             flask: flask,
             isSelected: selectedId == flask.id,
             offsetWave: $offsetWave
         )
         .offset(y: flask.id == selectedId ? -selectionOffset : 0)
         .matchedGeometryEffect(id: flask.id, in: nspace)
-        .aspectRatio(aspectRatio, contentMode: .fit)
         .accessibilityLabel("\(selectedId == flask.id ? "Selected " : "")Flask. \(flask.colorsAccessibilityLabel)")
         .onTapGesture {
             flaskTapped(with: flask.id)
