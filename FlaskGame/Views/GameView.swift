@@ -110,7 +110,7 @@ struct GameView: View {
                 }
             } catch {}
         }
-        .onChange(of: settings.shouldAnimate) {
+        .onChange(of: settings.shouldAnimate) { _ in
             startAnimation()
         }
     }

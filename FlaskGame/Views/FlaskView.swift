@@ -35,7 +35,10 @@ struct FlaskView: View {
         
         shape
             .stroke(.black, lineWidth: isSelected ? 6 : 2)
-            .stroke(isSelected ? .white : .black, lineWidth: isSelected ? 2 : 0)
+            .overlay {
+                shape
+                .stroke(isSelected ? .white : .black, lineWidth: isSelected ? 2 : 0)
+            }
             .background(
                 GeometryReader { geometry in
                     ZStack(alignment: .bottom) {

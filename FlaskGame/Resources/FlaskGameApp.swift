@@ -29,7 +29,7 @@ struct FlaskGameApp: App {
     var body: some Scene {
         WindowGroup {
             GameView(flasks: flasks, settings: settings, namespace: nspace)
-                .onChange(of: scenePhase) {
+                .onChange(of: scenePhase) { _ in
                     if scenePhase == .background {
                         flasks.save()
                     }
