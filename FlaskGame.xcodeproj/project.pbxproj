@@ -87,6 +87,7 @@
 		0E843699258BFBC500652B48 /* FlaskShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskShape.swift; sourceTree = "<group>"; };
 		0E8B0885286EA3AC00ADB6B7 /* SwiftUI+animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+animate.swift"; sourceTree = "<group>"; };
 		0E8B0889286EA60B00ADB6B7 /* VerticalLabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalLabelStyle.swift; sourceTree = "<group>"; };
+		0E98BBE82E0A0A4A00A7C864 /* IAPs.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = IAPs.storekit; sourceTree = "<group>"; };
 		0EA386BC28A85FC900D03E94 /* Difficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Difficulty.swift; sourceTree = "<group>"; };
 		0EB561B4286EB381009412D8 /* FlaskEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskEffect.swift; sourceTree = "<group>"; };
 		0EB561B6286EB5BA009412D8 /* PartRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartRectangle.swift; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 				0E22AA2128959D150019CE8E /* GoogleService-Info.plist */,
 				0E22AA1D2894F73E0019CE8E /* AdMob-Info.plist */,
 				0E843680258B23A700652B48 /* FlaskGameApp.swift */,
+				0E98BBE82E0A0A4A00A7C864 /* IAPs.storekit */,
 				0E843684258B23AB00652B48 /* Assets.xcassets */,
 				0E843689258B23AB00652B48 /* Info.plist */,
 			);
@@ -296,7 +298,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					0E84367C258B23A700652B48 = {
 						CreatedOnToolsVersion = 12.2;
@@ -425,6 +427,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HFR8F4BT7E;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -488,6 +491,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = HFR8F4BT7E;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -517,7 +521,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FlaskGame/Preview Content\"";
-				DEVELOPMENT_TEAM = HFR8F4BT7E;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = FlaskGame/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -542,7 +545,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FlaskGame/Preview Content\"";
-				DEVELOPMENT_TEAM = HFR8F4BT7E;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = FlaskGame/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

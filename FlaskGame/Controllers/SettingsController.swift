@@ -177,7 +177,6 @@ class SettingsController: ObservableObject {
                 self.objectWillChange.send()
             }
             .store(in: &subscriptions)
-            
     }
     
     // MARK: - Functions

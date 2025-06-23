@@ -1,0 +1,140 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "304BCFE3",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "1633159494",
+      "localizations" : [
+        {
+          "description" : "Support the development of the game.",
+          "displayName" : "Tip $1",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.tip.1",
+      "referenceName" : "Tip $1",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6444017536",
+      "localizations" : [
+        {
+          "description" : "Support the development of the game.",
+          "displayName" : "Tip $10",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.tip.10",
+      "referenceName" : "Tip $10",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "1651554239",
+      "localizations" : [
+        {
+          "description" : "Support the development of the game.",
+          "displayName" : "Tip $3",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.tip.3",
+      "referenceName" : "Tip $3",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "1651554603",
+      "localizations" : [
+        {
+          "description" : "Support the development of the game.",
+          "displayName" : "Tip $5",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.tip.5",
+      "referenceName" : "Tip $5",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1632774294",
+    "_developerTeamID" : "HFR8F4BT7E",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 772409932.80664599,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
