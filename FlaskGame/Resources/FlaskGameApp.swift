@@ -14,10 +14,8 @@ struct FlaskGameApp: App {
         // Hides home indicator for app store screenshots (in debug only)
         UIViewController.swizzleIndicator()
         
-        GADMobileAds.sharedInstance()
-            .requestConfiguration
-            .testDeviceIdentifiers = ["8e22988cfc882ab43b0112b8a514d7d0"]
-        GADMobileAds.sharedInstance().start { status in
+        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = ["8e22988cfc882ab43b0112b8a514d7d0"]
+        MobileAds.shared.start { status in
             status.adapterStatusesByClassName.forEach { (key, value) in
                 guard value.state == .notReady else { return }
                 

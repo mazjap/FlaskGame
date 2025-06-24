@@ -12,7 +12,7 @@ class AdController: NSObject, ObservableObject {
     weak var delegate: AdControllerDelegate?
     
     @MainActor
-    private(set) var additionalFlaskAd: GADRewardedAd!
+    private(set) var additionalFlaskAd: RewardedAd!
     
     private var newFlaskId: String {
         let test = "ca-app-pub-3940256099942544/1712485313"
@@ -32,8 +32,8 @@ class AdController: NSObject, ObservableObject {
             throw AppError.noData("Ad not yet loaded")
         }
         
-        try additionalFlaskAd.canPresent(fromRootViewController: nil)
-        additionalFlaskAd.present(fromRootViewController: nil) {
+        try additionalFlaskAd.canPresent(from: nil)
+        additionalFlaskAd.present(from: nil) {
             print("Ad has been presented")
         }
     }
@@ -69,7 +69,7 @@ class AdController: NSObject, ObservableObject {
     
     func refreshAd(retryCount: UInt = 2) async throws {
         do {
-            let newAd = try await GADRewardedAd.load(withAdUnitID: newFlaskId, request: .init())
+            let newAd = try await RewardedAd.load(with: newFlaskId, request: .init())
             newAd.fullScreenContentDelegate = self
             newAd.adMetadataDelegate = self
             
@@ -88,39 +88,35 @@ class AdController: NSObject, ObservableObject {
     }
 }
 
-extension AdController: GADFullScreenContentDelegate {
-    func adDidRecordClick(_ ad: GADFullScreenPresentingAd) {
+extension AdController: FullScreenContentDelegate {
+    func adDidRecordClick(_ ad: FullScreenPresentingAd) {
         nslog("User clicked ad...")
     }
     
-    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+    func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
         nslog("Dismissing ad")
-        Task {
-            await self.toggleDisplayingAd(false)
-            self.asyncRefreshAd()
-        }
+        self.toggleDisplayingAd(false)
+        self.asyncRefreshAd()
     }
     
     @MainActor
-    func adDidRecordImpression(_ ad: GADFullScreenPresentingAd) {
+    func adDidRecordImpression(_ ad: FullScreenPresentingAd) {
         nslog("Ad was impressive")
         giveReward()
     }
     
-    func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+    func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {
         nslog("Displaying ad to user...")
-        Task {
-            await self.toggleDisplayingAd(true)
-        }
+        self.toggleDisplayingAd(true)
     }
     
-    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+    func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         nserror(error)
     }
 }
 
-extension AdController: GADAdMetadataDelegate {
-    func adMetadataDidChange(_ ad: GADAdMetadataProvider) {
+extension AdController: AdMetadataDelegate {
+    func adMetadataDidChange(_ ad: AdMetadataProvider) {
         print("Metadata changed:")
         
         guard let metadata = ad.adMetadata else {
