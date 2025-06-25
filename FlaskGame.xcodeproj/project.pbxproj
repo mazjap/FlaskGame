@@ -46,6 +46,8 @@
 		0ED527622874145B00B75714 /* NSObject+Swizzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED527612874145B00B75714 /* NSObject+Swizzle.swift */; };
 		0ED527642874153D00B75714 /* UIViewController+HiddenIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED527632874153D00B75714 /* UIViewController+HiddenIndicator.swift */; };
 		0ED527662874222700B75714 /* Hidden.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED527652874222700B75714 /* Hidden.swift */; };
+		0ED7265F2E0C974C00F8BA34 /* AdConsentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED7265E2E0C974C00F8BA34 /* AdConsentView.swift */; };
+		0ED726612E0C97B900F8BA34 /* AppStorage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED726602E0C97B900F8BA34 /* AppStorage+Extension.swift */; };
 		0EF35817286FCC5D002D7F14 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF35816286FCC5D002D7F14 /* Color+Extension.swift */; };
 		0EF3581B286FF45B002D7F14 /* ConfettiCannon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3581A286FF45B002D7F14 /* ConfettiCannon.swift */; };
 		0EF3581D286FF490002D7F14 /* Confetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF3581C286FF490002D7F14 /* Confetti.swift */; };
@@ -97,6 +99,8 @@
 		0ED527612874145B00B75714 /* NSObject+Swizzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Swizzle.swift"; sourceTree = "<group>"; };
 		0ED527632874153D00B75714 /* UIViewController+HiddenIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+HiddenIndicator.swift"; sourceTree = "<group>"; };
 		0ED527652874222700B75714 /* Hidden.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hidden.swift; sourceTree = "<group>"; };
+		0ED7265E2E0C974C00F8BA34 /* AdConsentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdConsentView.swift; sourceTree = "<group>"; };
+		0ED726602E0C97B900F8BA34 /* AppStorage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppStorage+Extension.swift"; sourceTree = "<group>"; };
 		0EF35816286FCC5D002D7F14 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		0EF3581A286FF45B002D7F14 /* ConfettiCannon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiCannon.swift; sourceTree = "<group>"; };
 		0EF3581C286FF490002D7F14 /* Confetti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Confetti.swift; sourceTree = "<group>"; };
@@ -184,6 +188,7 @@
 				0EF3582228700C5B002D7F14 /* Modifiers */,
 				0E843682258B23A700652B48 /* GameView.swift */,
 				0E74EF78287165E1008D3FDA /* SettingsView.swift */,
+				0ED7265E2E0C974C00F8BA34 /* AdConsentView.swift */,
 				0E843690258B244700652B48 /* FlaskView.swift */,
 			);
 			path = Views;
@@ -230,6 +235,7 @@
 				0E2718EB2BFA5832008AF632 /* Array+Extension.swift */,
 				0E052DAF2873C83E00B387F0 /* UIWindowScene+Extension.swift */,
 				0E74EF7628702F56008D3FDA /* Binding+Extension.swift */,
+				0ED726602E0C97B900F8BA34 /* AppStorage+Extension.swift */,
 				0E052DA928739CA500B387F0 /* Error.swift */,
 				0ED527652874222700B75714 /* Hidden.swift */,
 				0ED527612874145B00B75714 /* NSObject+Swizzle.swift */,
@@ -360,6 +366,7 @@
 				0EF35817286FCC5D002D7F14 /* Color+Extension.swift in Sources */,
 				0ED527642874153D00B75714 /* UIViewController+HiddenIndicator.swift in Sources */,
 				0E052DAE2873C5B500B387F0 /* CGSize+Extension.swift in Sources */,
+				0ED726612E0C97B900F8BA34 /* AppStorage+Extension.swift in Sources */,
 				0EA386BD28A85FC900D03E94 /* Difficulty.swift in Sources */,
 				0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */,
 				0E74EF7728702F56008D3FDA /* Binding+Extension.swift in Sources */,
@@ -376,6 +383,7 @@
 				0E052DAA28739CA500B387F0 /* Error.swift in Sources */,
 				0E22AA1C2894F0B20019CE8E /* AdController.swift in Sources */,
 				0EF3582428701073002D7F14 /* FlaskColor.swift in Sources */,
+				0ED7265F2E0C974C00F8BA34 /* AdConsentView.swift in Sources */,
 				0E2718EC2BFA5832008AF632 /* Array+Extension.swift in Sources */,
 				0E74EF7B287166D7008D3FDA /* SettingsController.swift in Sources */,
 				0ED527662874222700B75714 /* Hidden.swift in Sources */,

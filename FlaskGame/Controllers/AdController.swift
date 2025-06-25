@@ -1,5 +1,6 @@
 import SwiftUI
 import GoogleMobileAds
+import AppTrackingTransparency
 
 protocol AdControllerDelegate: AnyObject {
     func giveReward()
@@ -12,17 +13,21 @@ class AdController: NSObject, ObservableObject {
     weak var delegate: AdControllerDelegate?
     
     @MainActor
-    private(set) var additionalFlaskAd: RewardedAd!
+    private(set) var additionalFlaskAd: RewardedAd?
     
     private var newFlaskId: String {
-        let test = "ca-app-pub-3940256099942544/1712485313"
+        let test = "ca-app-pub-3940256099942544/1712485313" // Test ad unit ID
         
+        #if DEBUG
+        return test
+        #else
         guard let url = Bundle.main.url(forResource: "AdMob-Info", withExtension: "plist"),
               let plist = NSDictionary(contentsOf: url) else {
             return test
         }
         
         return (plist.object(forKey: "new-flask-key") as? String) ?? test
+        #endif
     }
     
     @MainActor
@@ -32,9 +37,19 @@ class AdController: NSObject, ObservableObject {
             throw AppError.noData("Ad not yet loaded")
         }
         
-        try additionalFlaskAd.canPresent(from: nil)
-        additionalFlaskAd.present(from: nil) {
-            print("Ad has been presented")
+        guard let rootViewController = UIApplication.shared.rootViewController else {
+            throw AppError.noData("No root view controller available")
+        }
+        
+        // Check if we can present the ad
+        do {
+            try additionalFlaskAd.canPresent(from: rootViewController)
+        } catch {
+            throw AppError.noData("Cannot present ad: \(error.localizedDescription)")
+        }
+        
+        additionalFlaskAd.present(from: rootViewController) {
+            nslog("Ad has been presented")
         }
     }
     
@@ -54,9 +69,9 @@ class AdController: NSObject, ObservableObject {
     }
     
     func asyncRefreshAd(errorHandler: (@MainActor (Error) -> Void)? = nil) {
-        Task.detached {
+        Task.detached { [weak self] in
             do {
-                try await self.refreshAd()
+                try await self?.refreshAd()
             } catch {
                 let handler = errorHandler ?? { error in
                     nserror(error)
@@ -73,16 +88,25 @@ class AdController: NSObject, ObservableObject {
             newAd.fullScreenContentDelegate = self
             newAd.adMetadataDelegate = self
             
-            await MainActor.run {
-                self.additionalFlaskAd = newAd
+            await MainActor.run { [weak self] in
+                self?.additionalFlaskAd = newAd
             }
+            
+            nslog("Ad loaded successfully")
         } catch {
+            nslog("Ad load failed: \(error)")
+            
             if retryCount > 0 {
+                nslog("Retrying ad load. Attempts remaining: \(retryCount)")
+                try await Task.sleep(nanoseconds: 2_000_000_000) // Wait 2 seconds
                 try await refreshAd(retryCount: retryCount - 1)
-            } else if error.localizedDescription == "Request Error: No ad to show from all configured ad networks." {
-                throw AppError.noAds("If you have an adblocker, try disabling it")
             } else {
-                throw error
+                // Handle specific error cases
+                if error.localizedDescription.contains("No ad to show") {
+                    throw AppError.noAds("No ads available. If you have an adblocker, try disabling it")
+                } else {
+                    throw error
+                }
             }
         }
     }
@@ -90,42 +114,51 @@ class AdController: NSObject, ObservableObject {
 
 extension AdController: FullScreenContentDelegate {
     func adDidRecordClick(_ ad: FullScreenPresentingAd) {
-        nslog("User clicked ad...")
+        nslog("User clicked ad")
     }
     
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-        nslog("Dismissing ad")
-        self.toggleDisplayingAd(false)
-        self.asyncRefreshAd()
+        nslog("Ad dismissed")
+        Task { @MainActor in
+            self.toggleDisplayingAd(false)
+        }
+        
+        // Preload next ad
+        asyncRefreshAd()
     }
     
     @MainActor
     func adDidRecordImpression(_ ad: FullScreenPresentingAd) {
-        nslog("Ad was impressive")
+        nslog("Ad impression recorded")
         giveReward()
     }
     
     func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {
-        nslog("Displaying ad to user...")
-        self.toggleDisplayingAd(true)
+        nslog("Ad will present")
+        Task { @MainActor in
+            self.toggleDisplayingAd(true)
+        }
     }
     
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-        nserror(error)
+        nserror("Ad failed to present: \(error)")
+        Task { @MainActor in
+            self.toggleDisplayingAd(false)
+        }
     }
 }
 
 extension AdController: AdMetadataDelegate {
     func adMetadataDidChange(_ ad: AdMetadataProvider) {
-        print("Metadata changed:")
+        nslog("Ad metadata changed:")
         
         guard let metadata = ad.adMetadata else {
-            print("empty")
+            nslog("No metadata available")
             return
         }
         
-        metadata.forEach {
-            print("\tkey: \($0.key)\n\tvalue: \($0.value)")
+        metadata.forEach { key, value in
+            nslog("Metadata - \(key): \(value)")
         }
     }
 }
