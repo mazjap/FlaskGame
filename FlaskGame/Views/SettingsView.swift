@@ -17,32 +17,19 @@ struct SettingsView: View {
             ZStack {
                 Form {
                     Section {
-                        let animationDict: TwoWayDictionary<String, Bool?> = [
-                            "On": true,
-                            "Off": false,
-                            "System": nil
-                        ]
-                        
-                        Picker(
-                            "Use Animations",
-                            selection: $settings.usesAnimationsValue.map(
-                                to: { animationDict[$0] ?? "" },
-                                from: { animationDict[$0] ?? nil }
-                            )
-                        ) {
-                            ForEach(animationDict.st.keys.sorted(), id: \.self) {
-                                Text($0)
+                        Picker("Use Animations", selection: $settings.animationUsageOption) {
+                            ForEach(AnimationUsageOption.allCases, id: \.rawValue) { option in
+                                Text(option.displayName)
+                                    .tag(option)
                             }
                         }
                         .pickerStyle(.segmented)
                         
                         let matchBackgroundBinding: Binding<Bool> = {
-                            if let usesAnimations = settings.usesAnimationsValue {
-                                return usesAnimations
-                                ? $settings.backgroundMatchesFlaskValue
-                                : .constant(false)
-                            } else {
-                                return Binding { !settings.lowPowerMode }
+                            switch settings.animationUsageOption {
+                            case .on: $settings.backgroundMatchesFlaskValue
+                            case .off: .constant(false)
+                            case .system: Binding { !settings.lowPowerMode }
                             }
                         }()
                         

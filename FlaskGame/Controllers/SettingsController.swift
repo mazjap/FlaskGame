@@ -75,6 +75,34 @@ enum Tip: String, CaseIterable {
     }
 }
 
+enum AnimationUsageOption: String, CaseIterable {
+    case on
+    case off
+    case system
+    
+    fileprivate var storage: Bool? {
+        switch self {
+        case .on: true
+        case .off: false
+        case .system: nil
+        }
+    }
+    
+    var displayName: String {
+        rawValue.capitalized
+    }
+}
+
+extension AnimationUsageOption {
+    fileprivate init(rawValue: Bool?) {
+        self = switch rawValue {
+        case .some(true): .on
+        case .some(false): .off
+        case .none: .system
+        }
+    }
+}
+
 class SettingsController: ObservableObject {
     private enum Key: String {
         case backgroundMatchesFlask
@@ -97,15 +125,10 @@ class SettingsController: ObservableObject {
         }
     }
     
-    @Published var usesAnimationsValue: Bool? {
+    @Published var animationUsageOption: AnimationUsageOption {
         didSet {
             let key = Key.usesAnimations.rawValue
-            guard let usesAnimations = usesAnimationsValue else {
-                store.delete(key: key)
-                return
-            }
-            
-            store.set(usesAnimations, for: key)
+            store.set(animationUsageOption.storage, for: key)
         }
     }
     
@@ -122,7 +145,7 @@ class SettingsController: ObservableObject {
     
     // Convenience
     var backgroundMatchesFlask: Bool {
-        guard usesAnimationsValue != nil else {
+        guard animationUsageOption != .system else {
             return !lowPowerMode
         }
         
@@ -134,7 +157,7 @@ class SettingsController: ObservableObject {
     }
     
     var shouldAnimate: Bool {
-        usesAnimationsValue ?? !lowPowerMode
+        animationUsageOption.storage ?? !lowPowerMode
     }
     
     // Theme Colors
@@ -168,7 +191,7 @@ class SettingsController: ObservableObject {
         self.store = store
         
         self.backgroundMatchesFlaskValue = store.get(using: Key.backgroundMatchesFlask.rawValue) ?? true
-        self.usesAnimationsValue = store.get(using: Key.usesAnimations.rawValue)
+        self.animationUsageOption = .init(rawValue: store.get(using: Key.usesAnimations.rawValue))
         self.theme = store.get(using: Key.theme.rawValue) ?? "std"
         
         NotificationCenter.default.publisher(for: .NSProcessInfoPowerStateDidChange)

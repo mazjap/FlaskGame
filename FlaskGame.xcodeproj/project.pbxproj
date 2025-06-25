@@ -26,7 +26,6 @@
 		0E74EF7728702F56008D3FDA /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E74EF7628702F56008D3FDA /* Binding+Extension.swift */; };
 		0E74EF79287165E1008D3FDA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E74EF78287165E1008D3FDA /* SettingsView.swift */; };
 		0E74EF7B287166D7008D3FDA /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E74EF7A287166D7008D3FDA /* SettingsController.swift */; };
-		0E74EFFB28719082008D3FDA /* TwoWayDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E74EFFA28719082008D3FDA /* TwoWayDictionary.swift */; };
 		0E843681258B23A700652B48 /* FlaskGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843680258B23A700652B48 /* FlaskGameApp.swift */; };
 		0E843683258B23A700652B48 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E843682258B23A700652B48 /* GameView.swift */; };
 		0E843685258B23AB00652B48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E843684258B23AB00652B48 /* Assets.xcassets */; };
@@ -76,7 +75,6 @@
 		0E74EF7628702F56008D3FDA /* Binding+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extension.swift"; sourceTree = "<group>"; };
 		0E74EF78287165E1008D3FDA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0E74EF7A287166D7008D3FDA /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
-		0E74EFFA28719082008D3FDA /* TwoWayDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoWayDictionary.swift; sourceTree = "<group>"; };
 		0E84367D258B23A700652B48 /* FlaskGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlaskGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E843680258B23A700652B48 /* FlaskGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlaskGameApp.swift; sourceTree = "<group>"; };
 		0E843682258B23A700652B48 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -203,7 +201,6 @@
 				0E22AA25289648AE0019CE8E /* TinyFlask.swift */,
 				0E46862E2B88A222009F36BB /* AppConstants.swift */,
 				0EF3581C286FF490002D7F14 /* Confetti.swift */,
-				0E74EFFA28719082008D3FDA /* TwoWayDictionary.swift */,
 				0EF3582328701073002D7F14 /* FlaskColor.swift */,
 				0EA386BC28A85FC900D03E94 /* Difficulty.swift */,
 			);
@@ -358,7 +355,6 @@
 				0E843683258B23A700652B48 /* GameView.swift in Sources */,
 				0E052DB02873C83E00B387F0 /* UIWindowScene+Extension.swift in Sources */,
 				0E843691258B244700652B48 /* FlaskView.swift in Sources */,
-				0E74EFFB28719082008D3FDA /* TwoWayDictionary.swift in Sources */,
 				0E5A0A0A286DFCB10080877B /* ConfettiShape.swift in Sources */,
 				0EF3582128700B51002D7F14 /* FallingConfettiModifier.swift in Sources */,
 				0EF3581F286FF574002D7F14 /* CGPoint+Extension.swift in Sources */,
