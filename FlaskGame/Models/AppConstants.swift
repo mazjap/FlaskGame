@@ -63,3 +63,7 @@ extension Array {
         return self[index]
     }
 }
+
+enum AppStorageKey: String {
+    case adDisclosureStage = "adDisclosureStage"
+}
