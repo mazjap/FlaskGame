@@ -9,8 +9,7 @@ struct GameView: View {
     @ObservedObject private var settings: SettingsController
     
     @State private var selectedId: UUID? = nil
-    @State private var showNewGameAlert: Bool = false
-    @State private var alertError: AppError? = nil
+    @State private var presentedAlert: GameAlertType? = nil
     @State private var showSettings: Bool = false
     @State private var offsetWave: Bool = false
     
@@ -73,19 +72,27 @@ struct GameView: View {
                 }
             }
             .ignoresSafeArea()
-            .alert("Select Difficulty", isPresented: $showNewGameAlert) {
-                ForEach(Difficulty.allCases, id: \.rawValue) { dif in
-                    Button {
-                        newGame(difficulty: dif)
-                    } label: {
-                        Text(dif.rawValue.capitalized)
+            .alert(
+                presentedAlert.localizedTitle,
+                isPresented: $presentedAlert.isPresented,
+                presenting: presentedAlert
+            ) { alertType in
+                if case .newGame = alertType {
+                    ForEach(Difficulty.allCases, id: \.rawValue) { dif in
+                        Button {
+                            newGame(difficulty: dif)
+                        } label: {
+                            Text(dif.rawValue.capitalized)
+                        }
                     }
+                } else if case .restart = alertType {
+                    Button("Restart", role: .destructive) { flaskController.restart() }
                 }
                 
-                Button(role: .cancel) {
-                    showNewGameAlert = false
-                } label: {
-                    Text("Cancel")
+                Button("Cancel", role: .cancel) {}
+            } message: { alertType in
+                if case let .error(error) = alertType {
+                    Text(error.localizedDescription)
                 }
             }
             .fullScreenCover(isPresented: $showSettings) {
@@ -106,7 +113,7 @@ struct GameView: View {
                 try await adController.refreshAd()
             } catch let error as AppError {
                 await MainActor.run {
-                    alertError = error
+                    presentedAlert = .error(error)
                 }
             } catch {}
         }
@@ -128,7 +135,11 @@ struct GameView: View {
     
     private var toolbarContent: some View {
         HStack {
-            let showAdOption = flaskController.extraFlask == nil && adController.additionalFlaskAd != nil && alertError == nil
+            let extraFlaskCurrentlyExist = flaskController.extraFlask != nil
+            let adIsAvailable = adController.additionalFlaskAd != nil
+            let presentedAlertIsAnError = presentedAlert.map { $0.isError } ?? false
+            
+            let showAdOption = !extraFlaskCurrentlyExist && adIsAvailable && !presentedAlertIsAnError
             
             Button {
                 showSettings = true
@@ -140,16 +151,17 @@ struct GameView: View {
                 .layoutPriority(showAdOption ? 0 : 1)
             
             Button {
-                flaskController.undo()
+                setId()
+                presentedAlert = .restart
             } label: {
-                Label("Undo", systemImage: "arrow.uturn.backward.circle")
+                Label("Restart", systemImage: "restart.circle")
             }
             
             Spacer()
                 .layoutPriority(0)
             
             Button {
-                showNewGameAlert = true
+                presentedAlert = .newGame
             } label: {
                 Label("New Game", systemImage: "plus.circle")
             }
@@ -158,10 +170,9 @@ struct GameView: View {
                 .layoutPriority(0)
             
             Button {
-                setId()
-                flaskController.restart()
+                flaskController.undo()
             } label: {
-                Label("Restart", systemImage: "restart.circle")
+                Label("Undo", systemImage: "arrow.uturn.backward.circle")
             }
             
             Spacer()
